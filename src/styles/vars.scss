@@ -1,0 +1,79 @@
+$color-primary: #438eb9;//#18c79c
+$icon-lt-w: -13px;
+$icon-lt-h: -25px;
+// 图标 icon --- img
+.icon_img_bg_01{
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  background: url(../assets/img/logo4.png);
+  transform: scale(.4);
+  background-size: cover;
+}
+.icon_img_lt_01,
+.icon_img_lt_02,
+.icon_img_lt_03,
+.icon_img_lt_04,
+.icon_img_lt_05,
+.icon_img_lt_06,
+.icon_img_lt_07,
+.icon_img_lt_08,
+.icon_img_lt_09,
+.icon_img_lt_11,
+.icon_img_lt_12{
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: url(../assets/img/icon_home_real.png);
+  vertical-align: middle;
+}
+.icon_img_lt_01{
+  background-position: $icon-lt-w -303px;
+}
+.icon_img_lt_02{
+  background-position: $icon-lt-w (-303+$icon-lt-h);
+}
+.icon_img_lt_03{
+  background-position: $icon-lt-w (-303+$icon-lt-h*2);
+}
+.icon_img_lt_04{
+  background-position: $icon-lt-w (-303+$icon-lt-h*3);
+}
+.icon_img_lt_05{
+  background-position: $icon-lt-w (-303+$icon-lt-h*4);
+}
+.icon_img_lt_06{
+  background-position: $icon-lt-w*9.3 -98px;
+}
+.icon_img_lt_07{
+  background-position: $icon-lt-w*9.3 -131px;
+}
+.icon_img_lt_08{
+  background-position: $icon-lt-w*9.3 -159px;
+}
+.icon_img_lt_09{
+  background-position: $icon-lt-w*9.3 -189px;
+}
+.icon_img_lt_11{
+  background-position: $icon-lt-w (-303+$icon-lt-h*24.5);
+}
+.icon_img_lt_12{
+  background-position: -13px -256px;
+  /* vertical-align: middle; */
+  margin-top: -3px;
+}
+.icon_img_lt_10{
+  display: inline-block;
+  height: 40px;
+  width: 26px;
+  background: url(../assets/img/icon_home_real.png);
+  // vertical-align: middle;
+  background-position: 0 -859px;
+  float: left;
+}
+.icon_home_select{
+  background: url(../assets/img/icon_home_real.png);
+  background-position: -13px -279px;
+}
+
+
