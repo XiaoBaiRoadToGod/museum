@@ -1,4 +1,4 @@
-**demo**: [https://taylorchen709.github.io/vue-admin/](https://taylorchen709.github.io/vue-admin/)
+
 
 # To start
 
@@ -33,18 +33,6 @@ npm run build
     * main.js - main file
     * routes.js
 * static - static assets
-
-# Theme
-You can change theme by
-1. Generate theme packages by [https://elementui.github.io/theme-preview/#/](https://elementui.github.io/theme-preview/#/)
-2. Put theme packages in src/assets/theme/
-3. Edit src/main.js
-``` bash
-   import 'element-ui/lib/theme-default/index.css'
-   to
-   import './assets/theme/your-theme/index.css'
-```
-4. Edit src/styles/vars.scss
 
 
 # Browser support
