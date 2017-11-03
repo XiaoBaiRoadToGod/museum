@@ -173,12 +173,12 @@ var oneday = 1000 * 60 * 60 * 24;
     		var el = ev.target;
     		// console.log(el);
     		var usn = $(el).data('sn').split(',');
-    		console.log(usn);
+    		// console.log(usn);
         var sn = [];
         for( var i = 0; i<usn.length; i++){
           sn.push(this.analysisSn(usn[i]).sn);
         }
-        console.log(sn);
+        // console.log(sn);
         sn = sn.join(',');
     		this.$store.commit('NEWID',sn);
     		this.$store.commit('STARTDATE',this.startDate);
@@ -231,7 +231,7 @@ var oneday = 1000 * 60 * 60 * 24;
 
       },
       analysisSn(str){
-        console.log(str);
+        // console.log(str);
       	var reg = /(\w*)\/(\d*)/;
       	var sn =str.match(reg);
       	// console.log(sn);
@@ -537,29 +537,13 @@ var oneday = 1000 * 60 * 60 * 24;
       		for(var i = 0; i < noGroupDev.length; i++){
       			// console.log(allshenbeiGroup[i].LOGGER_SN);
       			for (var j = 0; j < allshenbeiGroup.length; j++) {
-      				// console.log(allshenbeiGroup[i].LOGGER_SN+','+noGroupDev[j].LOGGER_SN);
-      				// console.log(noGroupDev[j]);
-      				// console.log(i);
-      				// console.log(i-1<0);
-      				// console.log(j);
-      				// if(allshenbeiGroup[j].LOGGER_SN == 'HE20131574'){
-      				// 	if(noGroupDev[i].LOGGER_SN == 'HE20131574'){
-      				// 		console.log('-------');
-      				// 		console.log(noGroupDev[i].LOGGER_SN);
-      				// 	}
-      					
-      				// }
+
     					if(allshenbeiGroup[j].LOGGER_SN == noGroupDev[i].LOGGER_SN){
     						// console.log('--ok--');
     						// console.log(allshenbeiGroup[j].LOGGER_SN+','+noGroupDev[i].LOGGER_SN);
     						allshenbeiGroup.splice(j,1);
     						// i = i-1 < 0 ? 0 : i-1;
     						j = j-1 < 0 ? 0 : j-1;
-    						// continue;
-    						// i--;
-    						// j--;
-    						// console.log(allshenbeiGroup);
-    						 
     					}else{
     						// console.log('--no---');
     						
@@ -585,7 +569,7 @@ var oneday = 1000 * 60 * 60 * 24;
 
       	$('.myfenzuTable').click(function(ev){
       		// console.log('--1--');
-      		console.log(ev.target);
+      		// console.log(ev.target);
       	})
       },
       queryGroupFn(){
@@ -626,7 +610,7 @@ var oneday = 1000 * 60 * 60 * 24;
                   })
                   for(var j of i.LOGGERSNAll){
                     allSN.push(j.LOGGER_SN + '/' + j.VER_ID );
-                    console.log(j);
+                    // console.log(j);
                     data.push({
                       'LoggerName':j.LOGGER_NAME,
                       'LoggerSn':j.LOGGER_SN,
@@ -646,7 +630,7 @@ var oneday = 1000 * 60 * 60 * 24;
                     
                   }
                 }
-                console.log(this.dataArr);
+                // console.log(this.dataArr);
               }else{
                 this.dataArr = [];
                 this.allGroupName = [];

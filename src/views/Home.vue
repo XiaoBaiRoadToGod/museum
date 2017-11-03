@@ -33,16 +33,17 @@
                     <span>展厅区域分类</span>
                 </section>
                 <!--导航菜单-->
-                <el-menu class='el-menu-vertical-demo' v-if='options !== []' @select='chooseZhantingID' :default-active="JSON.stringify(options == [] ? '100' : options[0][0].GROUP_ID)" @open='openMenu' :default-openeds='openedArray'>
+                <el-menu class='el-menu-vertical-demo' v-if='options' @select='chooseZhantingID' :default-active="JSON.stringify(options == [] ? '100' : options[0][0].GROUP_ID)" @open='openMenu' :default-openeds='openedArray'>
                     <el-submenu index='1'>
                         <template slot="title"><i class='fenqu_icon zhantingIcon'></i>展厅</template>
                         <el-menu-item v-for='item in options[0]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
-                    <el-submenu index='2' v-if='options[1].length > 0'>
+                    <el-submenu index='2' v-if='options[1].length !== 0 '>
+                        
                         <template slot="title"><i class='fenqu_icon wenwuKuFang'></i>文物库房</template>
                         <el-menu-item v-for='item in options[1]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
-                    <el-submenu index='3' v-if='options[2].length > 0'>
+                    <el-submenu index='3' v-if='options[2].length !== 0 '>
                         <template slot="title"><i class='fenqu_icon guanwaiHuanjing'></i>馆外环境</template>
                         <el-menu-item v-for='item in options[2]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
@@ -204,9 +205,9 @@ export default {
                     desc: ''
                 },
                 ids: '',
-                options: [[{'GROUP_ID': 100}]],
-                options1: [],
-                options2: [],
+                options: [[{'GROUP_ID': 100}],[],[]],
+                // options1: [],
+                // options2: [],
                 defaultActive: '100',
                 dropdownVal: '',
                 openedArray: ['1', '2', '3'],  //默认打开的导航条
@@ -216,12 +217,12 @@ export default {
                 menuWidth: '200px',
                 guoboChooseZhanting: true,  // 国博设置为true，其他为false
                 scanCode:false,
-                qrcode:true,   // 二维码开关, true为显示
+                qrcode:false,   // 二维码开关, true为显示
                 // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
                 // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
                 // codeVal: 'http://10.10.120.65:8082',              // 二维码文字  国博
-                // codeVal: 'http://huato.net:8022',
-                codeVal: 'http://huato.net:8013',                 // 展会
+                codeVal: 'http://huato.net:8022',                     // 国博
+                // codeVal: 'http://huato.net:8013',                 // 展会
                 QrLogoSrc: '../../static/img/LOGO182.png',    //  logo 
                 dateType: 'datetime'           // 日期控件 的显示格式 国博 date   、其他 datetime
             }
@@ -360,7 +361,7 @@ export default {
                 // console.log(this.$store.state.zhantingID)
             },
             openMenu(idx){
-                console.log('open---'+idx);
+                // console.log('open---'+idx);
             },
             showMenu_1(i, status) {
                 this.$refs.menuCollapsed_1.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
@@ -404,26 +405,32 @@ export default {
             var ids = qs.stringify({
                 "": this.ids
             });
+
             zhantingList(ids).then(data => {
-                console.log(data);
+                // console.log(data);
                 let overViewName = [];
                 // 遍历对象
+                this.options=[];
+                let _this = this;
                 Object.keys(data).forEach(function (key) {
                     // console.log(key , data[key]);
-                   
+
+                    _this.options.push(data[key]);
                     for(var i = 0; i< data[key].length; i++ ) {
                         
                         overViewName.push(data[key][i]);
                         
                        
                     }
+                    // 
                 })
+                // console.log(overViewName);
                 this.$store.commit('OVERVIEWNAME', overViewName);
                 this.$store.commit('SETZHANTINGID', data[0][0].GROUP_ID);
                 this.defaultActive = JSON.stringify(data[0][0].GROUP_ID);
 
-                this.options = data;
-                console.log(this.options[0][0]);
+                // this.options = data;
+                console.log(this.options);
 
                 this.dropdownVal = data[0][0].GROUP_NAME;
                 this.$store.state.zhantingID = data[0][0].GROUP_ID;
@@ -454,9 +461,9 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
     height: 50px;
     // background: url(../../static/img/logo.png) no-repeat; 
     // background: url($LOGO);  // 崇信、庄浪 、陇西、鄂尔多斯  没logo，直接注释
-    // background-position: 0px 4px;  //其他
+    background-position: 0px 4px;  //其他
     // background-position: -4px 0px;      // 镇原
-    background-position: 0px 10px;   // 国博的位置
+    // background-position: 0px 10px;   // 国博的位置
     background-repeat: no-repeat;
     transform: scale(0.8);
     // transition: transform 1s ease;

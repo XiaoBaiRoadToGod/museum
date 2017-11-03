@@ -95,7 +95,7 @@
           
           </el-col>
         </el-row>
-        <el-row style='position: absolute;bottom: 0;' class='historyFooter'>
+        <el-row class='historyFooter'>
           <el-col :span='24' class='footer' v-if='tabShow' >
             <el-button type="primary" :class='{active:channelHide}' @click='singleChannel()'>单通道数据综合</el-button >
             <el-button type="primary" :class='{active: !channelHide}' @click='dbChanel()'>温湿度数据综合</el-button>
@@ -370,8 +370,8 @@ var oneday = 1000 * 60 * 60 * 24;
             });
       },
       humitureChart(data){
-        console.log('wenshidu');
-        console.log(data);
+        // console.log('wenshidu');
+        // console.log(data);
         if( data !== [] && data.length !== 0 ){
           let dataTime = [], tempData = [], humiData = [], loggerName = data[0].IName;
           let tempMax, tempMin, humiMax, humiMin;
@@ -436,7 +436,7 @@ var oneday = 1000 * 60 * 60 * 24;
                 left: '5%'
               },
               toolbox: {
-                  show: true,
+                  show: false,
                   itemSize: 25,
                   width: '20%',
                   // top: '1%',
@@ -641,7 +641,7 @@ var oneday = 1000 * 60 * 60 * 24;
         // 将id传到后台并获取仪器数据列表
         var potDateID_arry = {'groupID': zhantingID};
         Data_Instrument(potDateID_arry).then(rel => {
-          // console.log(rel);
+          console.log(rel);
           this.value = rel[0].name;
           this.value = rel[0].sn;
           this.$store.state.ModifySn = rel[0].sn;
@@ -958,7 +958,7 @@ var oneday = 1000 * 60 * 60 * 24;
               top: '1%',
               itemSize: 25,
               width:'20%',
-              show: true,
+              show: false,
               feature: {
                   dataZoom: {
                       yAxisIndex: 'none'
@@ -1124,7 +1124,7 @@ var oneday = 1000 * 60 * 60 * 24;
       },
       formatDateTime(val){
         var date = new Date(val);
-        console.log(date);
+        // console.log(date);
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
         m = m < 10 ? '0'+m : m;
@@ -1133,7 +1133,7 @@ var oneday = 1000 * 60 * 60 * 24;
         var h = date.getHours();
         var minute = date.getMinutes();
         minute = minute < 10 ? ('0'+minute) : minute;
-        console.log(y +  '-' + m + '-'+d+ ' '+ h + ":"+minute);
+        // console.log(y +  '-' + m + '-'+d+ ' '+ h + ":"+minute);
         return y +  '/' + m + '/'+d+ ' '+ h + ":"+minute;
       },
       formatDate:function(now) {

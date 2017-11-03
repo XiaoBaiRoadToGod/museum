@@ -1,94 +1,96 @@
 <template>
-<el-col :span='24' class='loginContainer'>
-  <el-col :span='24' class='loginTopBg'>
-    
-  </el-col>
-  <el-col :span='18' class='loginForm'>
-    <el-col :span='24' class='loginBgFont'>
-      <img class='loginBgImg' :src="loginMuseumImg" >
+
+  <el-col :span='24' class='loginContainer'>
+    <el-col :span='24' class='loginTopBg'>
+      
     </el-col>
-    <el-col :span='13' class='loginCont'>
-      <img class='nanboLoginLogo' :src="loginImg" >
+    <el-col :span='18' class='loginForm'>
+      <el-col :span='24' class='loginBgFont'>
+        <img class='loginBgImg' :src="loginMuseumImg" >
+      </el-col>
+      <el-col :span='13' class='loginCont'>
+        <img class='nanboLoginLogo' :src="loginImg" >
+      </el-col>
+      <el-col :span='5' class='myForm'>
+        <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container" >
+          <h3 class="title">用户登录</h3>
+          <el-form-item prop="account">
+            <el-input class='loginInput uaerName' type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="用户名" @focus='hiddenError'></el-input>
+            <div class='errorInfo' v-show='userError'>用户名或密码错误</div>
+          </el-form-item>
+          <el-form-item prop="checkPass">
+            <el-input class='loginInput userPwd' type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码" @focus='hiddenError'></el-input>
+            <div class='errorInfo' v-show='userError'>用户名或密码错误</div>
+          </el-form-item>
+          <el-form-item v-if='hideCode'> 
+          </el-form-item>
+          <el-form-item prop='verifyCode' v-if='!hideCode'>
+            <el-col :span='8'>
+              <el-input class='loginInput verCode' v-model='ruleForm2.verifyCode' auto-complete="off" placeholder="验证码" @focus='hiddenError'></el-input>
+            </el-col>
+            <el-col :span='8'><div id="verifyCode"></div></el-col>
+            <el-col :span='7' class="myCodeTitle"><span>看不清</span><span id='refresh' @click='refresh'>换一张</span></el-col>
+            <div class='errorInfo' v-show='verCodeError'>验证码错误</div>  
+          </el-form-item> 
+          <!-- <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox> -->
+          <el-form-item class='formItem'>
+            <el-button type="primary" class='LoginBtn' style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining" >登录</el-button>
+            <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
+          </el-form-item>
+          <el-form-item class='serviceItem formItem'  v-if='qrcode'>
+            <a href="javascript:;" class='appAction' @click='openScanCode'><i class='serviceText'>手机APP服务器接口地址</i><i class='myIcon'></i></a>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-col>
-    <el-col :span='5' class='myForm'>
-      <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container" >
-        <h3 class="title">用户登录</h3>
-        <el-form-item prop="account">
-          <el-input class='loginInput uaerName' type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="用户名" @focus='hiddenError'></el-input>
-          <div class='errorInfo' v-show='userError'>用户名或密码错误</div>
-        </el-form-item>
-        <el-form-item prop="checkPass">
-          <el-input class='loginInput userPwd' type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码" @focus='hiddenError'></el-input>
-          <div class='errorInfo' v-show='userError'>用户名或密码错误</div>
-        </el-form-item>
-        <el-form-item v-if='hideCode'> 
-        </el-form-item>
-        <el-form-item prop='verifyCode' v-if='!hideCode'>
-          <el-col :span='8'>
-            <el-input class='loginInput verCode' v-model='ruleForm2.verifyCode' auto-complete="off" placeholder="验证码" @focus='hiddenError'></el-input>
-          </el-col>
-          <el-col :span='8'><div id="verifyCode"></div></el-col>
-          <el-col :span='7' class="myCodeTitle"><span>看不清</span><span id='refresh' @click='refresh'>换一张</span></el-col>
-          <div class='errorInfo' v-show='verCodeError'>验证码错误</div>  
-        </el-form-item> 
-        <!-- <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox> -->
-        <el-form-item class='formItem'>
-          <el-button type="primary" class='LoginBtn' style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining" >登录</el-button>
-          <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
-        </el-form-item>
-        <el-form-item class='serviceItem formItem'  v-if='qrcode'>
-          <a href="javascript:;" class='appAction' @click='openScanCode'><i class='serviceText'>手机APP服务器接口地址</i><i class='myIcon'></i></a>
-        </el-form-item>
-      </el-form>
-    </el-col>
-  </el-col>
-  <el-col :span='24' class='scanCode' v-if='scanCode'>
-    <el-col :span='24' class='scanCodeClose'>
-      <span  @click='clodeScanCode'></span>
-      <div class='QrCode' id='myQrCode'>
-        <vue-qr :text='codeVal' :logoSrc='QrLogoSrc' dotScale='0.5' logoMargin='5' width='230' height='230' size='230'></vue-qr>
-        
-      </div>
-    </el-col>
-    <el-col :span='24'  class='picTitle'>
-      <span>
-        <span class='step'>
-          <span class='codeLeft'>
-            <i class='circle'>第一步</i>
+    <el-col :span='24' class='scanCode' v-if='scanCode'>
+      <el-col :span='24' class='scanCodeClose'>
+        <span  @click='clodeScanCode'></span>
+        <div class='QrCode' id='myQrCode'>
+          <vue-qr :text='codeVal' :logoSrc='QrLogoSrc' dotScale='0.5' logoMargin='5' width='230' height='230' size='230'></vue-qr>
+          
+        </div>
+      </el-col>
+      <el-col :span='24'  class='picTitle'>
+        <span>
+          <span class='step'>
+            <span class='codeLeft'>
+              <i class='circle'>第一步</i>
+            </span>
+            <span class='codeRight'>
+              <i class='text'>打开手机APP</i>
+              <i class='text bottomText'>点击登录按钮下方“服务器设置”</i>
+            </span>
           </span>
-          <span class='codeRight'>
-            <i class='text'>打开手机APP</i>
-            <i class='text bottomText'>点击登录按钮下方“服务器设置”</i>
-          </span>
+          <img src="../../static/img/iPhone-1.png" >
         </span>
-        <img src="../../static/img/iPhone-1.png" >
-      </span>
-      <span  class='step'>
-          <span class='codeLeft'>
-            <i class='circle'>第二步</i>
-          </span>
-          <span class='codeRight'>
-            <i class='text'>点击弹窗左上方图标" <i class='sao'></i> "</i>
-          </span>
-        <img src="../../static/img/iPhone-2.png" >
-      </span>
-      <span  class='step'>
-          <span class='codeLeft'>
-            <i class='circle'>第三步</i>
-          </span>
-          <span class='codeRight'>
-            <i class='text'>扫描上方二维码</i>
-            <i class='text bottomText'>读取当前APP服务端地址点击“确定”</i>
-          </span>
-        <img src="../../static/img/iPhone-3.png" >
-      </span>
+        <span  class='step'>
+            <span class='codeLeft'>
+              <i class='circle'>第二步</i>
+            </span>
+            <span class='codeRight'>
+              <i class='text'>点击弹窗左上方图标" <i class='sao'></i> "</i>
+            </span>
+          <img src="../../static/img/iPhone-2.png" >
+        </span>
+        <span  class='step'>
+            <span class='codeLeft'>
+              <i class='circle'>第三步</i>
+            </span>
+            <span class='codeRight'>
+              <i class='text'>扫描上方二维码</i>
+              <i class='text bottomText'>读取当前APP服务端地址点击“确定”</i>
+            </span>
+          <img src="../../static/img/iPhone-3.png" >
+        </span>
+      </el-col>
     </el-col>
-  </el-col>
-  <el-col :span='24' class='loginFooter'>
-    <div>CopyRight&copy;2008-1016,深圳华图测控系统有限公司,粤ICP备08032186号</div>
+    <el-col :span='24' class='loginFooter'>
+      <div>CopyRight&copy;2008-1016,深圳华图测控系统有限公司,粤ICP备08032186号</div>
+    </el-col>
+
   </el-col>
 
-</el-col>
 </template>
 
 <script>
@@ -104,8 +106,8 @@
       return {
         logining: false,
         ruleForm2: {
-          account: '',
-          checkPass: '',
+          account: '',   // 国博默认 admin
+          checkPass: '',  // 国博默认 admin
           verifyCode:''
         },
         rules2: {
@@ -127,7 +129,7 @@
         userError: false,
         scanCode:false,
         loginMuseumImg:'../../static/img/LoginLogo.png',  //  公共的文字图片
-        loginImg: '../../static/img/huato.JPG',    // 公司logo
+        // loginImg: '../../static/img/huato.JPG',    // 公司logo
         // loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
         // loginImg: '../../static/img/shenboLoginLogo.png',   // 深博的登录页背景
         // loginImg: '../../static/img/guoboLoginLogo.png',   // 国博的登录页背景
@@ -138,13 +140,15 @@
         // loginImg: '../../static/img/zhenyuanLogin.jpg',   // 镇原的登录页背景
         // loginImg: '../../static/img/jinchang.jpg',   // 金昌的登录页背景
         // loginImg: '../../static/img/tianshui.jpg',   // 天水的登录页背景
-        qrcode: true,     // 二维码开关 ， true为显示
-        hideCode: false,    // 隐藏验证码，true隐藏
+        // loginImg: '../../static/img/qingchengLogin.png',     // 庆城的登录页背景
+        loginImg: '../../static/img/mianyangLoginLogo.png',     // 绵阳的登录页背景
+        qrcode: false,     // 二维码开关 ， true为显示
+        hideCode: false,    // 隐藏验证码，true隐藏     国博隐藏
         // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
         // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
         // codeVal: 'http://10.10.120.65:8082',              // 二维码文字  国博
-        // codeVal: 'http://huato.net:8022',               // 国博
-        codeVal: 'http://huato.net:8013',                 // 展会
+        codeVal: 'http://huato.net:8022',               // 国博
+        // codeVal: 'http://huato.net:8013',                 // 展会
         QrLogoSrc: '../../static/img/LOGO182.png'    //  logo 
       };
     },
@@ -262,7 +266,10 @@
     },
     mounted(){
       var _this = this;
-      this.verify = new GVerify('verifyCode'); // 初始化验证码
+      if(!this.hideCode) {
+        this.verify = new GVerify('verifyCode'); // 初始化验证码
+      }
+      
       window.addEventListener('scroll',this.scanScroll);
       $(window).keyup(function(ev){
         // console.log(ev);

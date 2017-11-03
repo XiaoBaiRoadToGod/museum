@@ -19,6 +19,8 @@ import qs from 'qs'
 // axios.defaults.baseURL = 'http://192.168.1.100:8080/api';     // 镇原
 // axios.defaults.baseURL = 'http://192.168.0.117:8080/api';     // 金昌
 // axios.defaults.baseURL = 'http://192.168.1.234:8080/api';     // 天水
+// axios.defaults.baseURL = 'http://192.168.0.254:8080/api';     // 庆城
+// axios.defaults.baseURL = 'http://192.168.1.110:8080/api';     // 绵阳
 // axios.defaults.baseURL = '/api';
 
 // let base = 'http://192.168.10.42:8080/api';

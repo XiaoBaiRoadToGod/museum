@@ -5,7 +5,7 @@
 		<el-col :span='24' class="imgCont"><img  v-bind:src='imgUrl' alt=""></el-col>
 		<el-col :span='24' class='fontSize18'>博物馆简介</el-col>
 		<el-col :span='24' class='detail'>{{detail}}</el-col>
-		<el-col :span='24' class='moreDetail'><a :href="detailsUrl" target='_blank'><i class='el-icon-caret-right'></i>更多详情</a></el-col>
+		<el-col :span='24' class='moreDetail'><!-- <a :href="detailsUrl" target='_blank'><i class='el-icon-caret-right'></i>更多详情</a> --></el-col>
 	</el-col>
 	<el-col :span='16' class="borderCont">
 		<el-col :span='24' class='myBorder'>
@@ -173,15 +173,16 @@ import {mapState} from 'vuex'
 				setDay: null,
 				setDialog: false,
 				loading: false,
-				quanguanInfo: true,     //  深博、国博、南博为true, 其他false
-				// detailsUrl:'http://www.chnmuseum.cn/'         // 中国国家博物馆
+				quanguanInfo: false,     //  深博、国博、南博为true, 其他false
+				detailsUrl:'http://www.chnmuseum.cn/'         // 中国国家博物馆
 				// detailsUrl:'http://www.njmuseum.com/'         // 南京博物馆
 				// detailsUrl:'http://www.shenzhenmuseum.com/'   // 深圳博物馆
 				// detailsUrl:'http://www.zyxbwg.cn'                // 镇原县博物馆
 				// detailsUrl: 'http://www.zlbwg.com/'           //庄浪县博物馆
 				// detailsUrl: 'http://www.jcsbwg.com'           //金昌市博物馆
 				// detailsUrl: 'http://www.tssbwg.com.cn/'           //天水市博物馆
-				detailsUrl: 'http://www.huato.com'
+				// detailsUrl: 'http://atestu.lh.xb-cloud.com/101864060/'           //庆城县博物馆
+				// detailsUrl: 'http://www.huato.com'
 			} 
 		},
 		methods: {
@@ -197,8 +198,8 @@ import {mapState} from 'vuex'
 					if(reg.test(val)){
 						return true;
 					}else{
-						console.log(val);
-						console.log(reg1.test(val));
+						// console.log(val);
+						// console.log(reg1.test(val));
 						if(reg1.test(val)){
 							return true;
 						}else{
@@ -220,16 +221,16 @@ import {mapState} from 'vuex'
 			},
 			setDate(){
 				this.setDialog = true;
-				console.log(this.myDay);
+				// console.log(this.myDay);
 				this.setDay = '';
-				console.log(this.setDay);
+				// console.log(this.setDay);
 				this.setDay = this.myDay;
-				console.log(this.setDay);
+				// console.log(this.setDay);
 				
 			},
 			okSetDialog(){
 				
-				console.log('-'+this.setDay+'-');
+				// console.log('-'+this.setDay+'-');
 				if(this.myReg(this.setDay) || this.setDay == ''){
 					this.$message({
 						type:'warning',
@@ -264,15 +265,15 @@ import {mapState} from 'vuex'
 				})
 			},
 			loggersChange(value){
-				console.log(value);
-				console.log(this.checkedLoggers);
+				// console.log(value);
+				// console.log(this.checkedLoggers);
 				this.num = value.length;
 				this.checkAll = value.length === this.loggers.length;
 				this.isIndeterminate = value.length > 0 && value.length < this.loggers.length
 			},
 			AllCheckChange(event){
-				console.log(event.target.checked);
-				console.log(this.loggers);
+				// console.log(event.target.checked);
+				// console.log(this.loggers);
 				var logg = [];
 				for(var j = 0;j<this.loggers.length;j++){
 					logg.push(this.loggers[j].key);
@@ -280,7 +281,7 @@ import {mapState} from 'vuex'
 				this.checkedLoggers = event.target.checked ? logg : [];
 				this.num = this.checkedLoggers.length;
 				this.isIndeterminate = false;
-				console.log(this.checkedLoggers)
+				// console.log(this.checkedLoggers)
 			},
 			closeDialog(){
 				this.bianjiDialog = false;
@@ -343,7 +344,7 @@ import {mapState} from 'vuex'
 				})
 			},
 			handleClose(){
-				console.log('---');
+				// console.log('---');
 				this.checkedLoggers = [];
 				this.checkAll = false;
 				
@@ -489,7 +490,7 @@ import {mapState} from 'vuex'
             }
 		},
 		activated() {
-			console.log('----')
+			// console.log('----')
 			var ww = $('.my-el-table').width();
 			$('.my-el-table div table').width(ww);
 		}

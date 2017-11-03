@@ -578,10 +578,10 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				var _this = this;
 				var sn = rows[idx].sn;
 				var switchState = rows[idx].value2;	
-				console.log(val);
-				console.log(idx);
-				console.log(rows);
-				console.log(switchState)			
+				// console.log(val);
+				// console.log(idx);
+				// console.log(rows);
+				// console.log(switchState)			
 				if(val){
 					this.$confirm('是否开机', {
 						type: 'warning'
@@ -617,7 +617,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 									message:'已关机'
 								});
 								setTimeout(function(){
-									console.log('-------');
+									// console.log('-------');
 									_this.getDataNum();
 									_this.getData();
 								},0)

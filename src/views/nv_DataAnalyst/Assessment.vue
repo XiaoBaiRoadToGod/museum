@@ -107,7 +107,7 @@
 		      label="平均温度(°C)">
 		    </el-table-column>
 		    <el-table-column
-		      prop="wave_data_Tmp"
+		      prop="wave_data_Tmp" 
 		      label="温度波动">
 		    </el-table-column>
 		    <el-table-column
@@ -214,7 +214,7 @@ var oneday = 1000 * 60 * 60 * 24;
 				}
 			},
 			Suduku_UpData: function(data){
-				console.log(data);
+				// console.log(data);
 				this.Suduku = [];
 				for (var i = 0; i < data.length; i++) {
 					this.Suduku.push({
@@ -284,8 +284,6 @@ var oneday = 1000 * 60 * 60 * 24;
 		 			this.TexNull = true;
 		 			this.loading = false; 
           			// this.alertMasg('该段时间无数据,请重新选择!','warning');
-
-          			// this.alertMasg('该段时间无数据,请重新选择!','warning');
           			this.tab_buttom_data = []; //  清空
           			$("#chartLine1").empty();
           			$("#chartLine2").empty();
@@ -325,7 +323,7 @@ var oneday = 1000 * 60 * 60 * 24;
                     trigger: 'axis'
                 },
                 toolbox: {
-			        show: true,
+			        show: false,
 			        left: brele,
 			        itemSize:25,
 			        width:'20%',
@@ -408,8 +406,8 @@ var oneday = 1000 * 60 * 60 * 24;
 	      },
 	      timeFormatter(value){
 			var date = new Date(value);
-			console.log(value);
-			console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '+ date.getHours()+':'+date.getMinutes());
+			// console.log(value);
+			// console.log(date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '+ date.getHours()+':'+date.getMinutes());
 			return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate() + ' '+ date.getHours()+':'+date.getMinutes();
 		  },
 		  windowResize(){
@@ -435,7 +433,7 @@ var oneday = 1000 * 60 * 60 * 24;
 		   },
 		   formatDateTime(val){
 				var date = new Date(val);
-				console.log(date);
+				// console.log(date);
 				var y = date.getFullYear();
 				var m = date.getMonth() + 1;
 				m = m < 10 ? '0'+m : m;
@@ -444,7 +442,7 @@ var oneday = 1000 * 60 * 60 * 24;
 				var h = date.getHours();
 				var minute = date.getMinutes();
 				minute = minute < 10 ? ('0'+minute) : minute;
-				console.log(y +  '-' + m + '-'+d+ ' '+ h + ":"+minute);
+				// console.log(y +  '-' + m + '-'+d+ ' '+ h + ":"+minute);
 				return y +  '/' + m + '/'+d+ ' '+ h + ":"+minute;
 			},
 

@@ -95,7 +95,7 @@ let routes = [
         { path: '/MeanValue', component: MeanValue, name: '平均值', hidden: true },
         { path: '/assessment', component: Assessment, name: '综合评估' },
         { path: '/childen_Chart', component: Childen_Chart, name: '', hidden: true },
-        { path: '/heatField', component: HeatField, name: '热量场' }
+        // { path: '/heatField', component: HeatField, name: '热量场' }
         
       ]
     },

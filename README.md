@@ -52,4 +52,4 @@ You can change theme by
 Modern browsers and IE 10+.
 
 # License
-zenjin && houli
+zengjin && houli

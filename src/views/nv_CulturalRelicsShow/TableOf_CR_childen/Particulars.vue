@@ -615,7 +615,7 @@ export default {
                     toolbox: {
                         left:'80%',
                         top: '5%',
-                        show: true,
+                        show: false,
                         itemSize:25,
                         width:'20%',
                         feature: {

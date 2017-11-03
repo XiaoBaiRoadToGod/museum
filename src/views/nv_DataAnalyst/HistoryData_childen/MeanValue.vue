@@ -106,9 +106,9 @@ import echarts from '../../../../static/js/echarts';
 			            'endTime': this.timeFormatter(this.endDate),
 			            'sn': this.snArr
 		          	};
-		          	console.log(params);
+		          	// console.log(params);
 		          	TabMulti(params).then( data => { // 表格数据
-		          		console.log(data);
+		          		// console.log(data);
 		          		this.addTab_data(data);
 		          	});
 		          	this.getMeanQuxian();
@@ -167,11 +167,11 @@ import echarts from '../../../../static/js/echarts';
 						endTime: this.timeFormatter(this.endDate),
 						Usn: this.snArr
 					}
-					console.log(params);
+					// console.log(params);
 					// console.log(params)
 					GetMeanValue(params).then(res => {
 						this.loading = false;
-						console.log(res);
+						// console.log(res);
 						if(res.length == 0 ){
 							this.$message({
 								type:'warning',
@@ -214,9 +214,9 @@ import echarts from '../../../../static/js/echarts';
 					galleryDate.push(data[i].MyTime);
 				}
 				galleryData.push(galleryOne, galleryTow, galleryThree, galleryFour)
-				console.log(galleryData.length);
+				// console.log(galleryData.length);
 				var buler = '';
-				for(var i = 0; i < galleryData.length; i++){
+				for(var i = 0; i < this.galleryNum; i++){
 					// console.log(galleryData[i]);
 					if(i == 0){
 						buler = '80%';
@@ -228,9 +228,9 @@ import echarts from '../../../../static/js/echarts';
 				
 			},
 			dragCharts(i, data, date, buler, type, unit){
-				
+				// console.log(i);
 				this.$nextTick(function () {
-					// console.log('meanChart'+ (i+1));
+					// console.log(document.getElementById('meanChart'+ (i+1)));
 					this.chartLine = echarts.init(document.getElementById('meanChart'+ (i+1)));
 					// console.log(data);
 					this.chartLine.setOption({
@@ -256,7 +256,7 @@ import echarts from '../../../../static/js/echarts';
 				            orient: 'horizontal',
 				            itemSize:25,
 				            width:'20%',
-				            show: true,
+				            show: false,
 				            feature: {
 				                dataZoom: {
 				                    yAxisIndex: 'none'
@@ -348,9 +348,9 @@ import echarts from '../../../../static/js/echarts';
 		},
 		activated(){
 			// console.log(this.$store.state.NewID);
-			console.log(this.$store.state.startDate);
+			// console.log(this.$store.state.startDate);
 			this.snArr = this.$store.state.NewID;
-			console.log(this.snArr);
+			// console.log(this.snArr);
 			this.startDate = this.$store.state.startDate == null ? this.formatDateTime(this.startDate):this.formatDateTime(this.$store.state.startDate);
 			this.endDate = this.$store.state.endDate == null ? this.formatDateTime(this.endDate) : this.formatDateTime(this.$store.state.endDate);
 			this.$store.state.NewID = null;
