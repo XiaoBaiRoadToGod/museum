@@ -326,12 +326,15 @@ import {mapState} from 'vuex'
 				var params = {day: this.myDay};
 				GetOverviewGroupDetails(params).then(res => {
 					console.log(res);
+					res = res.sort(function(a, b){  // 按名字排序					
+						return (a.LOGGER_NAME).localeCompare(b.LOGGER_NAME, 'zh-Hans-CN', {sensitivity: 'accent'});
+					});
 					this.loading = false;
-					this.overViewTableData = [];
+					this.overViewTableData = []; 
 					for(var i = 0;i<res.length;i++){
 						this.overViewTableData.push({
 							'name':res[i].LOGGER_NAME,
-							'location':res[i].Position ,
+							'location':res[i].Position,
 							'temp': res[i].Ch1Avg || 0,
 							'humi': res[i].Ch2Avg || 0,
 							'tempMaxVal': res[i].Ch1Max || 0,

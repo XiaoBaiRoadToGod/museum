@@ -774,6 +774,9 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				Controls(params).then(res => {
 					_this.controlData = [];
 					console.log(res);
+					res = res.sort(function(a, b){  // 按名字排序							
+						return (a.LOGGER_NAME).localeCompare(b.LOGGER_NAME, 'zh-Hans-CN', {sensitivity: 'accent'});
+					});
 					if(res.length > 0){
 						for (var i = 0; i < res.length; i++) {	
 

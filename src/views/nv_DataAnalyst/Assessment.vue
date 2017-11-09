@@ -238,6 +238,9 @@ var oneday = 1000 * 60 * 60 * 24;
 				//   name Tmp_data_Max  Tmp_data_Min Vaio_data_Tmp wave_data_Tmp Huid_data_Max Huid_data_Min Vod_data_Huid Wave_data_Huid
 				// console.log(data);
 				if( data != '' ){
+					data = data.sort(function(a, b){  // 按名字排序							
+						return (a[0]).localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'});
+					});
 					this.tab_buttom_data = [];
 					for (var i = 0; i < data.length; i++) {
 						this.tab_buttom_data.push({

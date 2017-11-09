@@ -203,7 +203,7 @@ import qs from 'qs'
 					this.count = 0;
 					var previewImg = $('#previewImg');
 					previewImg.children().remove();
-					var obj = document.getElementById('imgUpload') ; 
+					var obj = document.getElementById('imgUpload'); 
 					obj.value=''; 
 				}
 				

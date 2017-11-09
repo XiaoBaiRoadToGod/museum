@@ -138,7 +138,7 @@
 					<el-checkbox-group 
 					    v-model="checkedProduct"
 					    :min="0"
-					    :max="20" class="pad_Checked" @change="CheckedArray">
+					    :max="25" class="pad_Checked" @change="CheckedArray">
 					    <el-checkbox v-for="AssF in AssFied" :label="AssF.label" :key="AssF.value"  class="wid_Checked">{{AssF.value}}</el-checkbox>
 					  </el-checkbox-group>
 				</section>
@@ -387,27 +387,27 @@ var oneday = 1000 * 60 * 60 * 24;
 
 				// 图表y轴配置
 				var yAxisData = [{
-			        				type: 'value',
-			        				name: '(℃) 温度',
-			        				min: tempMin,
-			        				max: tempMax,
-			        				interval: TempInterVal,
-			        				axisLabel: {
-			        					formatter: '{value}'
-			        				},
-			        				splitNmuber: 5
-			        			},
-			        			{
-			        				type:'value',
-			        				name:'湿度 (%RH)',
-			        				min:humiMin,
-			        				max: humiMax,
-			        				interval:HumiInterVal,
-			        				axisLabel:{
-			        					formatter:'{value}'
-			        				},
-			        				splitNmuber: 5
-			        			}];
+        				type: 'value',
+        				name: '(℃) 温度',
+        				min: tempMin,
+        				max: tempMax,
+        				interval: TempInterVal,
+        				axisLabel: {
+        					formatter: '{value}'
+        				},
+        				splitNmuber: 5
+        			},
+        			{
+        				type:'value',
+        				name:'湿度 (%RH)',
+        				min:humiMin,
+        				max: humiMax,
+        				interval:HumiInterVal,
+        				axisLabel:{
+        					formatter:'{value}'
+        				},
+        				splitNmuber: 5
+        			}];
 				if(data[0].ChannelNum == 1) {
 					yAxisData = [{
 						type: 'value',
@@ -646,13 +646,7 @@ var oneday = 1000 * 60 * 60 * 24;
 	          			var sortData = this.bubbleSort(res);  // 把数据按长度排序，最长的在后面
 						var dataMaxLength = sortData[sortData.length - 1];//最长的数组
 						var data = res;
-						data = data.sort(function(a, b){  // 按名字排序
-							if(a.length > 0 && b.length > 0){
-								return (a[0].IName).localeCompare(b[0].IName);
-							};
-							return ;
-							
-						});
+						
 						/**
 						 * 判断多数据是否需要补数据
 						 * @param  {[type]} data.length >             1 [description]
@@ -755,20 +749,13 @@ var oneday = 1000 * 60 * 60 * 24;
 													'Ch4': '-',
 													'ITime':data[j].data[i].ITime
 												});
-												// lastNum = true;
-												
-												// console.log(i+ 'i');
-												// i = i - 1 < 0 ? 0 : i-1;
 												len += 1;
 												j = -1;
-												// continue;
-
-												
 											}
 											
 										}
 									} else {
-										console.log(i);
+										//console.log(i);
 										data[j].data.splice(i, 0, {
 											'Ch1': '-',
 											'Ch2': '-',
@@ -783,6 +770,9 @@ var oneday = 1000 * 60 * 60 * 24;
 						}
 						console.log(dataMaxLength)
 						// console.log(JSON.stringify(data));
+						data = data.sort(function(a, b){  // 按名字排序
+							return (a.IName).localeCompare(b.IName, 'zh-Hans-CN', {sensitivity: 'accent'});
+						});
 	          			this.humitureChart(data);
 	          			this.ChartLineColorName = [];
 	          			this.MaxDataChatLine = data[0].ChannelNum; //通道的数量
@@ -830,7 +820,7 @@ var oneday = 1000 * 60 * 60 * 24;
 	          			
 	          				var dragChart = [], TilTND = '', date = '', dataMax = [], dataMin = [], buler ='150%', yAxis_Name = '';
 	          				if( i == 0 ){
-	          					buler = '80%'
+	          					buler = '80%';
 	          				}
 	          				this.ChartLineColorName = [];
 	          				for( var j = 0; j < allChartData.length; j++) {
@@ -845,10 +835,10 @@ var oneday = 1000 * 60 * 60 * 24;
 	          					dragChart.push({
 	          						'type': 'line',
 	          						'name': allChartData[j].shebeiName,
-	          						'smooth' : false,
-	          						'symbol':'none',
+	          						'smooth': false,
+	          						'symbol': 'none',
 	          						'data': this.isIdentical ? this.breakpoint(allChartData[j].data[i].data) : allChartData[j].data[i].data,
-	          						'lineStyle':{'normal':{'width': this.lineStyleWidth}}
+	          						'lineStyle': {'normal': {'width': this.lineStyleWidth}}
 	          					})
 	          					// max = Math.ceil(max);
 	          					// min = Math.floor(min);
@@ -872,7 +862,7 @@ var oneday = 1000 * 60 * 60 * 24;
 	          			this.OFdataloading = true;
 	          			// console.log(JSON.stringify(allChartData))
 	          			// console.log(new Date());
-	          		}else {
+	          		} else {
 	          			this.hidd_show_boxL_true();
 	          			this.loading = false;
 	          		}

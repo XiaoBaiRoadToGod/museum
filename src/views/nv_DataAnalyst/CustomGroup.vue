@@ -607,7 +607,10 @@ var oneday = 1000 * 60 * 60 * 24;
                     'data':data,
                     'allSn':allSN
                     
-                  })
+                  });
+                  i.LOGGERSNAll = i.LOGGERSNAll.sort(function(a, b){  // 按名字排序              
+                    return (a.LOGGER_NAME).localeCompare(b.LOGGER_NAME, 'zh-Hans-CN', {sensitivity: 'accent'});
+                  });
                   for(var j of i.LOGGERSNAll){
                     allSN.push(j.LOGGER_SN + '/' + j.VER_ID );
                     // console.log(j);

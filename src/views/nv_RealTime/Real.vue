@@ -169,7 +169,9 @@
     <el-col :span="3" class="pos_rea realRight ">
       <section class="tic_hed" >
          <!--  <img  src='../../../static/img/ON.png' height="22" width="60" class="icon_On_off flt_r" :class='{active: showList}' @click="click_icon_OF($event)"> -->
-           <img  src='../../../static/img/ON.png' height="22" width="60" class="icon_On_off flt_r"  @click="click_icon_OF($event)">
+           <!-- <img  src='../../../static/img/ON.png' height="22" width="60" class="icon_On_off flt_r"  @click="click_icon_OF($event)"> -->
+           <el-switch v-model="showList" on-text="分布图" off-text='列表' :width='80' on-color='#58a7d2'>
+          </el-switch>
       </section>
       <div class='relRightCont contHidden'>
         <section class='qualitEval'>
@@ -252,6 +254,9 @@ export default {
         console.log(data);
         this.rela_img = '';
         this.items = [];
+        data = data.sort(function(a, b){  // 按名字排序            
+            return (a[0]).localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'});
+          });
         for (var i = 0; i < data.length; i++) {
           this.rela_img = data[i][23];
           // console.log(data[i][13])
@@ -831,7 +836,7 @@ export default {
     height: 25px;
     width: 60px;
     position: fixed;
-    right: 190px;
+    right: 240px;
     top: 57px;
     // float: left;
     z-index: 99;
