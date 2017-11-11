@@ -6,39 +6,39 @@
 				<el-table-column prop='device' label='设备类型' min-width='140'></el-table-column>
 				<el-table-column prop='location' label='安装位置' ></el-table-column>
 				<el-table-column label='温度(℃)' min-width='70'>
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<span :style='{color:controlData[scope.$index].Tcolor}'>{{ controlData[scope.$index].temp }}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label='湿度(%)' >
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<span :style='{color:controlData[scope.$index].Hcolor}'>{{ controlData[scope.$index].humi }}</span>
 					</template>
 				</el-table-column>
 				<el-table-column prop='setTemp' label='设置温度(℃)' min-width='94'></el-table-column>
 				<el-table-column prop='setHumi' label='设置湿度(%)' min-width='90'></el-table-column>
 				<el-table-column  label='设备状态' >
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<span :style="{color:controlData[scope.$index].stateColor}">{{ controlData[scope.$index].state }}</span>
 					</template>
 				</el-table-column>
 				<!-- <el-table-column  label='冷凝片状态' min-width='90'>
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<span :style='{color:controlData[scope.$index].condenColor}'>{{ controlData[scope.$index].conden }}</span>
 					</template>
 				</el-table-column> -->
 				<!-- <el-table-column label='水箱温度'>
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<span :style='{color:controlData[scope.$index].Wcolor}'>{{ controlData[scope.$index].waterTank }}</span>
 					</template>
 				</el-table-column> -->
 				<el-table-column  label='液位状态'>
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<img v-bind:src="controlData[scope.$index].imgUrl" class='levelImg'>
 					</template>
 				</el-table-column>
 				<el-table-column  label='操作' min-width='145'>
-					<template scope='scope'>
+					<template slot-scope='scope'>
 						<el-button :disabled='controlData[scope.$index].buttonDisabled' @click.native.preven='setSomething(scope.$index,controlData)'>设置</el-button>
 							<!-- 展柜小型电子恒湿机  弹出框 -->
 						<el-dialog  :visible.sync="dialogSmallVisible" class='myDialog' @close="btnCancel" v-if='deviceState != []'>

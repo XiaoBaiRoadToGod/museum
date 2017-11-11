@@ -61,10 +61,10 @@
 	  					<el-radio class="radio" v-model="radio" label="2">湿度</el-radio>
 		  			</el-row>
 		  			<el-row :span="24" class="Sudu_item_act active">
-		  				<el-col :span="8" v-for="item in Suduku" :keyW="item.value1" class="item_cont_br">{{ item.value1 }}</el-col>
+		  				<el-col :span="8" v-for="(item, idx) in Suduku" :key='idx' :keyW="item.value1" class="item_cont_br">{{ item.value1 }}</el-col>
 		  			</el-row>
 		  			<el-row :span="24" class="Sudu_item_act">
-		  				<el-col :span="8" v-for="item in Suduku" :keyW="item.value2" class="item_cont_br">{{ item.value2 }}</el-col>
+		  				<el-col :span="8" v-for="(item, idx) in Suduku" :key='idx' :keyW="item.value2" class="item_cont_br">{{ item.value2 }}</el-col>
 		  			</el-row>
 		  			<el-row :span="24" class="Yield_sixe">
 		  				<el-col :span="12">指标</el-col>

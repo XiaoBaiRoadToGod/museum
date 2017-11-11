@@ -86,7 +86,7 @@
 				</section>
 				<section class='contenanier' >
 					<el-radio-group v-model='chooseSheBei'  size='small' @change='changeChooseShebei'>
-						<el-tooltip v-for='item of AssFied' effect='dark' :content='item.value' placement='right'>
+						<el-tooltip v-for='(item, idx) in AssFied' :key='idx' effect='dark' :content='item.value' placement='right'>
 							<el-radio  :label='item.label'>{{ item.value }}</el-radio>
 						</el-tooltip>
 						
@@ -138,8 +138,8 @@
 					<el-checkbox-group 
 					    v-model="checkedProduct"
 					    :min="0"
-					    :max="25" class="pad_Checked" @change="CheckedArray">
-					    <el-checkbox v-for="AssF in AssFied" :label="AssF.label" :key="AssF.value"  class="wid_Checked">{{AssF.value}}</el-checkbox>
+					    :max="50" class="pad_Checked" @change="CheckedArray">
+					    <el-checkbox v-for="AssF in AssFied" :label="AssF.label" :key="AssF.label"  class="wid_Checked">{{AssF.value}}</el-checkbox>
 					  </el-checkbox-group>
 				</section>
 				<section class="TrueSelect">
@@ -152,7 +152,7 @@
 </template>
 
 <script>
-
+ 
 var today = new Date();
 	today.setHours(0);
 	today.setMinutes(0);
@@ -781,7 +781,7 @@ var oneday = 1000 * 60 * 60 * 24;
 	          			// let _date = []; 
 	          			// let max = [];
 	          			// let min = [];
-          				for ( let [key, item] of Object.keys(data) ) {  // 遍历几台设备
+          				for ( let key of Object.keys(data) ) {  // 遍历几台设备
           					// console.log(key);
           					// console.log(data[key]);
           					allChartData.splice(key, 1, {
@@ -1107,7 +1107,7 @@ var oneday = 1000 * 60 * 60 * 24;
 			handleCheckAllChange(ev){
 				// console.log(ev.target.checked);
 				this.checkedProduct = ev.target.checked ? this.AssFiedSn : [];
-				this.isIndeterminate = false
+				this.isIndeterminate = false;
 			},
 			CheckedArray: function(value){
 				// console.log(this.checkedProduct,data)
@@ -1182,7 +1182,7 @@ var oneday = 1000 * 60 * 60 * 24;
 		       var interval = mean/5;
 		        // console.log(JSON.stringify(yAxis_Adata));
 		        // i ChOName IName ITime ChO data ChOUnit
-		        // console.log(echarts.getInstanceById($('#Chart' + (i + 1)).attr('_echarts_instance_')));
+		        console.log(echarts.getInstanceById($('#Chart' + (i + 1)).attr('_echarts_instance_')));
 		        // 基于准备好的dom，初始化echarts实例
 		        this.$nextTick(function () {
 

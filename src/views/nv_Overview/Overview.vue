@@ -128,7 +128,7 @@
 					<el-table-column
 						
 						label='操作'>
-						<template scope='scope'>
+						<template slot-scope='scope'>
 							<el-button type='text' @click.native.prevent="deleteRow(scope.$index, overViewTableData)">删除</el-button>
 						</template>
 					</el-table-column>

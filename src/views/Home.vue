@@ -36,16 +36,16 @@
                 <el-menu class='el-menu-vertical-demo' v-if='options' @select='chooseZhantingID' :default-active="JSON.stringify(options == [] ? '100' : options[0][0].GROUP_ID)" @open='openMenu' :default-openeds='openedArray'>
                     <el-submenu index='1'>
                         <template slot="title"><i class='fenqu_icon zhantingIcon'></i>展厅</template>
-                        <el-menu-item v-for='item in options[0]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                        <el-menu-item v-for='(item, idx) in options[0]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
                     <el-submenu index='2' v-if='options[1].length !== 0 '>
                         
                         <template slot="title"><i class='fenqu_icon wenwuKuFang'></i>文物库房</template>
-                        <el-menu-item v-for='item in options[1]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                        <el-menu-item v-for='(item, idx) in options[1]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
                     <el-submenu index='3' v-if='options[2].length !== 0 '>
                         <template slot="title"><i class='fenqu_icon guanwaiHuanjing'></i>馆外环境</template>
-                        <el-menu-item v-for='item in options[2]' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                        <el-menu-item v-for='(item, idx) in options[2]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
                     </el-submenu>
                 </el-menu>
                 

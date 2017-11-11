@@ -59,7 +59,7 @@
 				</el-dialog>
 			</el-col>
 			<el-col :span='24' v-if='isTitltShow' class='titltShow'> <span>当前时间没有数据或者没有分组！</span> </el-col>
-			<el-col :span='24' v-for='(item, idx) in dataArr' v-if='dataArr != null'>
+			<el-col :span='24' v-for='(item, idx) in dataArr' :key='idx' v-if='dataArr != null'>
 				<el-col :span='12' class='TextLeft'v-if='item.id != null'>
 					<span style='color:#6fb3e0'>分组：{{item.name}}</span>
 					<!-- <span>{{item.id}}</span> -->

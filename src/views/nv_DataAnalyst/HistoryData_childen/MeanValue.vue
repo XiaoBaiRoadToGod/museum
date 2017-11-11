@@ -33,7 +33,7 @@
                   <th colspan="2">{{ Anlyera_tab_had[0].endTime }}</th>
                 </tr>
               </thead>
-              <tbody v-for="Datas in DataAnalyzer" class="tbd_bg" :key="Datas.Analyzer">
+              <tbody v-for="Datas of DataAnalyzer" class="tbd_bg" :key="Datas.Analyzer">
                 <tr>
                   <td>{{ Datas.Analyzer }}</td>
                   <td>{{ Datas.record }}</td>
@@ -52,10 +52,10 @@
 					
 	</el-col>
 	<el-col :span='24'>
-		<el-col :span='24' v-for=' (idx,item) in galleryNum ' v-if='galleryNum <= 2' :name='idx' :id='"meanChart" + idx' style='height:300px'>
+		<el-col :span='24' v-for=' (idx,item) of galleryNum ' :key='item' v-if='galleryNum <= 2' :name='idx' :id='"meanChart" + idx' style='height:300px'>
 			
 		</el-col>
-		<el-col :span='12' v-for=' (idx,item) in galleryNum ' v-if='galleryNum > 2' :name='idx' :id='"meanChart" + idx' style='height:300px'>
+		<el-col :span='12' v-for=' (idx,item) of galleryNum ' :key='item' v-if='galleryNum > 2' :name='idx' :id='"meanChart" + idx' style='height:300px'>
 			
 		</el-col>
 	</el-col>
