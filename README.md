@@ -23,4 +23,4 @@ npm run build
 Modern browsers and IE 10+.
 
 # License
-zengjin && houli111
+zengjin && houli
