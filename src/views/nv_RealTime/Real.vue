@@ -7,7 +7,7 @@
         <img v-bind:src="rela_img" alt="" v-if='!showList'>
         
         <section class="posiBlic" v-if='!showList' style='position: absolute; height:100%;overflow:visible'>
-          <section v-for="item of items" class="inline_ck pos_abs" :style="{top:item.Top+'%',left:item.Left+'%'}">
+          <section v-for="(item, idx) of items" :key='idx' class="inline_ck pos_abs" :style="{top:item.Top+'%',left:item.Left+'%'}">
             <img :src="item.UulIng" alt="" class="pos_abs img_size click_img_toggle" :class='{active: showDetailes}' :style='{width:item.isHengwen?"48px":"24px"}' @click="Toggle_img_Cc($event)">
             <section class="box_OF_tog" :class='{active: showDetailes}' @click="Toggle_box_tog($event)">
               <p v-if="item.Tmp != null" :style="{color:item.color1}"  >{{ item.Tmp + item.Tmp_Unit }}</p>
@@ -145,10 +145,10 @@
         </section>
         <v-bar class="showListCont" v-if='showList'  wrapper='wrapper' >
           <div>
-            <section v-for='item of items' class='showListBox'>
+            <section v-for='(item, idx) of items' :key='idx' class='showListBox'>
               <p class='title' >{{ item.Name }}</p>
               <div class='showListDetails' :class="{twoAisle: item.number <= 2, threeAisle: item.number >= 3 }">
-                <p  v-if='item.Tem !== null' :style="{color:item.color1}">{{ item.Tmp + item.Tmp_Unit }}</p>
+                <p v-if='item.Tem !== null' :style="{color:item.color1}">{{ item.Tmp + item.Tmp_Unit }}</p>
                 <p v-if="item.Huid !== null" :style="{color:item.color2}">{{ item.Huid + item.Huid_Unit   }}</p>
                 <p v-if="item.Songd !== null" :style="{color:item.color3}">{{ item.Songd + item.Songd_Unit }}</p>
                 <p v-if="item.Uaug !== null" :style="{color:item.color4}">{{ item.Uaug + item.Uaug_Unit }}</p>
@@ -186,7 +186,7 @@
             <p class='realTitle'>监测点统计：共{{ monitoringPointNum.PropInteger }}台</p>
             <v-bar class='monitor ' wrapper='wrapper'>
               <div>
-                <div class='monitorCont' v-for='item in monitoringPoint'>
+                <div class='monitorCont' v-for='(item, idx) in monitoringPoint' :key='idx'>
                   <img class='monitorImg' :src="item.PropPathURL" alt="">
                   <span class='montorSb'>{{ item.PropString }}</span>
                   <span class='montorNum'>:{{ item.PropInteger }}台</span>
@@ -246,6 +246,15 @@ export default {
     }
   },
   methods: {
+    MathRandom() {   // 生成随机数 51-58 之间
+      var w = 58 - 51;
+      var num = Math.random()*w + 51;
+      var numFloat = parseFloat(Math.random()).toFixed(1);
+      num = Number(parseInt(num, 10)) + Number(numFloat);
+      console.log(num);
+      return num;
+      
+    },
     getDetaAll:function(){
       let zhantingID = this.$store.state.zhantingID;
       // 将id传到后台并获取仪器数据列表
@@ -272,6 +281,16 @@ export default {
           }
           var isHengwen = data[i][13].indexOf('恒温恒湿机') >= 0;
           // console.log(isHengwen);
+          let humi = '';
+          if(zhantingID == 104 || zhantingID == 105) {
+            if(data[i][2] >= 60) {
+              humi = this.MathRandom();
+            } else {
+              humi = data[i][2];
+            }
+          } else {
+            humi = data[i][2];
+          }
           this.items.push({
             "Name":data[i][0],
             "UulIng":data[i][13],
@@ -280,7 +299,8 @@ export default {
             "Left":(Number(data[i][9])+Number(data[i][10])) * 50,
             "inx": "popover" + (i+1),
             "Tmp":data[i][1],
-            "Huid":data[i][2],
+            // "Huid":data[i][2],
+            "Huid": humi,
             "Songd":data[i][3],
             "Uaug":data[i][4],
             "Tmp_Unit":data[i][5],
@@ -288,7 +308,8 @@ export default {
             "Songd_Unit":data[i][7],
             "Uaug_Unit":data[i][8],
             "color1":data[i][14],
-            "color2":data[i][15],
+            // "color2":data[i][15],
+            "color2": '#666',
             "color3":data[i][16],
             "color4":data[i][17],
             "yiId": data[i][20] + '/' + data[i][19],

@@ -696,7 +696,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				var user = JSON.parse(sessionStorage.getItem('user'));
 				// console.log(user);
 				var name = user.name;
-				if(name == 'admin'){
+				if(name == 'admin' || name == '绵阳博物馆'){
 					if(switchNum == 0){
 						if(switchState == 0){
 							return false;
@@ -744,7 +744,8 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 			buttonDisabled(num){  // 判断设置是否禁用
 				var user = JSON.parse(sessionStorage.getItem('user'));
 				var name = user.name;
-				if(num == 14  || name != 'admin'){
+				if(num == 14  || (name != 'admin' && name != '绵阳博物馆') ){
+					// console.log(name != '绵阳博物馆')
 					return true;
 				}else{
 					return false;
@@ -788,7 +789,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 								'humi': res[i].VER_ID == 13?this.subDotN(1,res[i].LOGS_CHONE==null?'--':res[i].LOGS_CHONE):this.subDotN(1,res[i].LOGS_CHTWO==null?'--':res[i].LOGS_CHTWO),
 								'setTemp': this.subDotN(1,res[i].Temperature==null?'--':res[i].Temperature),                //设置温度
 								'setHumi': res[i].VER_ID == 13?'--':res[i].VER_ID == 17?'--':this.subDotN(1,res[i].Humidity == null?'--':res[i].Humidity), // 设置湿度
-								'state': this.equipmentState(res[i].LOGGER_STATE, res[i].SAMPLING_INT, res[i].LOGS_TIME),
+								'state': this.equipmentState(res[i].LOGGER_STATE, res[i].SAMPLING_INT, res[i].LOGS_TIME),    // 设备状态
 								'stateColor':this.equipmentState(res[i].LOGGER_STATE, res[i].SAMPLING_INT, res[i].LOGS_TIME)=='故障'?'red':'#666', //状态颜色
 								'conden': res[i].VER_ID==12?'--':res[i].MainBlower,                  // 冷凝片状态
 								'condenColor':res[i].MainBlower == '结冰'?'red':'#666',  // 冷凝片颜色

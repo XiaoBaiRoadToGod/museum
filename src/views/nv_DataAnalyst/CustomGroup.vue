@@ -118,10 +118,10 @@ var oneday = 1000 * 60 * 60 * 24;
       return {
         dialogVisible: false,
         data: [],
-    	allNoData: [],
-    	startDate:new Date(today - oneday * 7),
-    	endDate:new Date(),
-    	pickerOptions0: {
+    	  allNoData: [],
+    	  startDate:new Date(today - oneday * 7),
+    	  endDate:new Date(),
+    	  pickerOptions0: {
           disabledDate(time) {
             return time.getTime() > Date.now();
           }

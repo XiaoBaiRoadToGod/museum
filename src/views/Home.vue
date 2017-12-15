@@ -1,7 +1,7 @@
 <template>
     <el-row class="container">
         <el-col :span="24" class="header">
-            <el-col :span="3" class='logoCont'>
+            <el-col :span="2" class='logoCont'>
                 
             </el-col>
             <el-col :span="18" class="logo logo-collapse logoCont">
@@ -11,9 +11,9 @@
                     <i class="fa fa-align-justify"></i>  //可添加按钮或者文字简介
                 </div> -->
             </el-col>
-            <el-col :span="3" class="userinfo">
+            <el-col :span="4" class="userinfo">
                 <el-dropdown trigger="hover">
-                    <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /><div class="text_head_name"><span class="text_up_01">Welcome.</span><span class="text_but_01">{{sysUserName}}</span></div>
+                    <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar" /><div class="text_head_name"><span class="text_but_01">{{sysUserName}}</span></div>
                     </span>
                     <el-dropdown-menu slot="dropdown" class="menu_home_r">
                         <el-dropdown-item @click.native="home"><i class="fa icon_img_lt_06"></i>主页</el-dropdown-item>
@@ -33,22 +33,25 @@
                     <span>展厅区域分类</span>
                 </section>
                 <!--导航菜单-->
-                <el-menu class='el-menu-vertical-demo' v-if='options' @select='chooseZhantingID' :default-active="JSON.stringify(options == [] ? '100' : options[0][0].GROUP_ID)" @open='openMenu' :default-openeds='openedArray'>
-                    <el-submenu index='1'>
-                        <template slot="title"><i class='fenqu_icon zhantingIcon'></i>展厅</template>
-                        <el-menu-item v-for='(item, idx) in options[0]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
-                    </el-submenu>
-                    <el-submenu index='2' v-if='options[1].length !== 0 '>
-                        
-                        <template slot="title"><i class='fenqu_icon wenwuKuFang'></i>文物库房</template>
-                        <el-menu-item v-for='(item, idx) in options[1]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
-                    </el-submenu>
-                    <el-submenu index='3' v-if='options[2].length !== 0 '>
-                        <template slot="title"><i class='fenqu_icon guanwaiHuanjing'></i>馆外环境</template>
-                        <el-menu-item v-for='(item, idx) in options[2]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
-                    </el-submenu>
-                </el-menu>
-                
+                <v-bar class="zhantingListMenu"   wrapper='wrapper' >
+                    <div>
+                        <el-menu class='el-menu-vertical-demo ' v-if='options' @select='chooseZhantingID' :default-active="JSON.stringify(options == [] ? '100' : this.defaultActive)" @open='openMenu' :default-openeds='openedArray'>
+                            <el-submenu index='1' v-if='options[0].length !== 0'>
+                                <template slot="title"><i class='fenqu_icon zhantingIcon'></i>展厅</template>
+                                <el-menu-item v-for='(item, idx) in options[0]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                            </el-submenu>
+                            <el-submenu index='2' v-if='options[1].length !== 0 '>
+                                
+                                <template slot="title"><i class='fenqu_icon wenwuKuFang'></i>文物库房</template>
+                                <el-menu-item v-for='(item, idx) in options[1]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                            </el-submenu>
+                            <el-submenu index='3' v-if='options[2].length !== 0 '>
+                                <template slot="title"><i class='fenqu_icon guanwaiHuanjing'></i>馆外环境</template>
+                                <el-menu-item v-for='(item, idx) in options[2]' :key='idx' :index='JSON.stringify(item.GROUP_ID)'>{{ item.GROUP_NAME }}<i class="sanjiao_zt"></i></el-menu-item>
+                            </el-submenu>
+                        </el-menu>
+                    </div>
+                </v-bar>
             </aside>
             <aside class="home_nav_pag_b menu-expanded" :class="{ active: !isActive }">
                 <!--导航菜单-->
@@ -217,14 +220,13 @@ export default {
                 menuWidth: '200px',
                 guoboChooseZhanting: true,  // 国博设置为true，其他为false
                 scanCode:false,
-                qrcode:false,   // 二维码开关, true为显示
+                qrcode:true,   // 二维码开关, true为显示
                 // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
-                // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
-                // codeVal: 'http://10.10.120.65:8082',              // 二维码文字  国博
-                codeVal: 'http://huato.net:8022',                     // 国博
+                codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
+                // codeVal: 'http://huato.net:8022',                     // 国博
                 // codeVal: 'http://huato.net:8013',                 // 展会
                 QrLogoSrc: '../../static/img/LOGO182.png',    //  logo 
-                dateType: 'datetime'           // 日期控件 的显示格式 国博 date   、其他 datetime
+                dateType: 'date'           // 日期控件 的显示格式 国博 date   、其他 datetime
             }
         },
         methods: {
@@ -304,7 +306,7 @@ export default {
             inSetting() {
                 this.isActive = false;
                 
-                console.log('----'+this.collapsed)
+                //console.log('----'+this.collapsed)
                 if(this.collapsed){
                     $('.home_nav_pag_b.active.menu-expanded').removeClass('menu-expanded');
                     $('.container .main aside').width(50);
@@ -313,14 +315,18 @@ export default {
             },
             // 离开设置页面后，左侧菜单相应改变
             outSetting() {
+                //console.log('likai');
                 let URL = location.href, //使用 url 判断
                     set = URL.includes('changePassWord'),
                     relic_info = URL.includes('dR_Relic'),
+                    setHide = URL.includes('setLoggerHide'),
                     relic_img = URL.includes('pto_Relic');
                 // console.log('当前：' + URL);
-                if (set || relic_info || relic_img) {
+                if (set || relic_info || relic_img || setHide) {
+                    console.log('---set');
                     this.isActive = false;
                 } else {
+                    console.log('----'+this.collapsed);
                     this.isActive = true;
                     this.collapsed = false;
                     $('.container .main aside').width(200);
@@ -368,9 +374,9 @@ export default {
             },
             windowResize(){
                    var ww = document.documentElement.clientWidth || document.body.clientWidth;
-                    if(ww <1366){
-                        this.containerWidth = 1366 - 201;
-                        ww = 1366;
+                    if(ww < 1360){
+                        this.containerWidth = 1360 - 201;
+                        ww = 1360;
                     }
                     this.containerWidth = ww - 201;
                     if(this.collapsed){
@@ -384,6 +390,7 @@ export default {
                       // console.log(hh);
                       $('.content-wrapper').css({'height':hh - 90 - 32});
                     $('.showListCont').height(hh - 90 - 32 - 30);
+                    $('.zhantingListMenu').height(hh - 90 - 32 - 10);
             },
             scanCodeEvent(){
                 if(this.scanCode){
@@ -394,6 +401,9 @@ export default {
         },
         updated(){
             
+        },
+        watch: {
+            "$route": 'outSetting'
         },
         mounted() {
             var user = sessionStorage.getItem('user');
@@ -407,33 +417,38 @@ export default {
             });
 
             zhantingList(ids).then(data => {
-                // console.log(data);
+                console.log(data);
                 let overViewName = [];
                 // 遍历对象
                 this.options=[];
                 let _this = this;
                 Object.keys(data).forEach(function (key) {
                     // console.log(key , data[key]);
-
                     _this.options.push(data[key]);
-                    for(var i = 0; i< data[key].length; i++ ) {
-                        
+                    for(var i = 0; i< data[key].length; i++ ) {                     
                         overViewName.push(data[key][i]);
-                        
-                       
                     }
                     // 
                 })
+                console.log(this.options);
                 // console.log(overViewName);
+                if(this.options[0].length !== 0) {
+                    this.defaultActive = JSON.stringify(this.options[0][0].GROUP_ID);
+                } else if(this.options[1].length !== 0) {
+                    this.defaultActive = JSON.stringify(this.options[1][0].GROUP_ID);
+                }else if(this.options[2].length !== 0) {
+                    this.defaultActive = JSON.stringify(this.options[2][0].GROUP_ID);
+                }
                 this.$store.commit('OVERVIEWNAME', overViewName);
-                this.$store.commit('SETZHANTINGID', data[0][0].GROUP_ID);
-                this.defaultActive = JSON.stringify(data[0][0].GROUP_ID);
+                this.$store.commit('SETZHANTINGID', this.defaultActive);
+                // this.defaultActive = JSON.stringify(data[0][0].GROUP_ID);
 
                 // this.options = data;
                 console.log(this.options);
 
-                this.dropdownVal = data[0][0].GROUP_NAME;
-                this.$store.state.zhantingID = data[0][0].GROUP_ID;
+                // this.dropdownVal = data[0][0].GROUP_NAME;
+                this.dropdownVal = this.defaultActive;
+                this.$store.state.zhantingID = this.defaultActive;
             });
             // console.log(sessionStorage.getItem('user'))
             this.windowResize();
@@ -449,25 +464,37 @@ export default {
 
 <style scoped lang="scss">
 @import '~scss_vars';
-// $LOGO:'../assets/img/NanBoLogo.png';         // 南博LOGO
+$LOGO:'../assets/img/NanBoLogo.png';         // 南博LOGO
 // $LOGO:'../../static/img/ShenBoLogo.png';        // 深博LOGO
-$LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
+// $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
 // $LOGO:'../../static/img/zhenYuanLogo.png';   // 镇原Logo
 // $LOGO:'../../static/img/tianshuiLogo.png';   // 天水Logo
+// $LOGO:'../../static/img/anhuiLogo.png';      // 安徽LOGO
 .huatoLogo {
     display: inline-block;
     width: 50px;  //  其他博物馆位置
     // width:175px;  // 国博的logo宽度
     height: 50px;
     // background: url(../../static/img/logo.png) no-repeat; 
-    // background: url($LOGO);  // 崇信、庄浪 、陇西、鄂尔多斯  没logo，直接注释
+    // background: url($LOGO);  // 崇信、庄浪 、陇西、鄂尔多斯、绵阳  没logo，直接注释
     background-position: 0px 4px;  //其他
+    // background-position: 0 0;         // 安徽
     // background-position: -4px 0px;      // 镇原
     // background-position: 0px 10px;   // 国博的位置
     background-repeat: no-repeat;
+    background-size: 100%;
     transform: scale(0.8);
     // transition: transform 1s ease;
     // animation: Mis 1s ease infinite;
+}
+ul.el-menu--horizontal li {
+    width: 150px;
+}
+.zhantingListMenu {
+    padding-top: 10px;
+}
+.bar--wrapper > * {
+    padding-right: 7px !important; 
 }
 @keyframes Mis{
     0%{
@@ -575,7 +602,7 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
     top: 0px;
     bottom: 0px;
     width: 100%;
-    min-width:1366px;
+    min-width:1360px;
     .header {
         height: 50px;
         line-height: 50px;
@@ -603,20 +630,25 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
                 .text_head_name {
                     display: inline-block;
                     height: 50px;
-                    width: 80px;
+                    width: 100px;
+                    text-align: center;
+                    overflow: hidden;
                     float: right;
-                    line-height: 0;
+                    line-height: 50px;
                     .text_up_01 {
-                        display: inline-block;
+                        // display: inline-block;
                         height: 25px;
                         line-height: 40px;
-                        float: left;
+                        // float: left;
                     }
                     .text_but_01 {
-                        display: inline-block;
+                        // display: inline-block;
                         height: 25px;
-                        line-height: 15px;
-                        float: left;
+                        padding-right: 5px;
+                        white-space:nowrap;
+                        overflow: hidden;
+                        // line-height: 15px;
+                        // float: left;
                     }
                 }
             }
@@ -703,7 +735,8 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
                 height: 40px;
                 line-height: 40px;
                 background: #eef1f6;
-                padding-left: 100px;
+                padding-left: 100px;   // 以前的
+                padding-left: 20px;    // 加上空调调控的
                 // .title {
                 //  width: 200px;
                 //  float: left;
@@ -719,6 +752,7 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
                 // padding: 16px 0 11px 11px;
                 position: relative;
                 height: auto;
+                overflow-x: hidden; 
                 // min-height:95%;
                 overflow-y:auto;
             }
@@ -730,7 +764,7 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
 }
 
 .footer_fixd {
-    min-width: 1349px;
+    min-width: 1360px;
     height: 32px;
     background: #1d1e24;
     text-align: center;
@@ -807,6 +841,13 @@ $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
 </style>
 
 <style media="screen">
+.el-menu-item .icon_img_lt_air {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url(../../static/img/airTitle.png) no-repeat;
+    vertical-align: middle;
+}
 .el-loading-mask {
     top: 200px;
 }

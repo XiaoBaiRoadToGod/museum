@@ -84,7 +84,7 @@ import qs from 'qs'
                 
             }
 		},
-		beforeDestroy(){
+		beforeDestroy(){ 
 			this.$emit('outSetting'); // 离开设置页面后改变左侧菜单显示
 		},
 		deactivated(){

@@ -4,7 +4,7 @@
       <el-form-item label='仪器名称：' class='myLabel '>
       <!-- 组件 -->
         <!-- <span class="fot_MicYH">仪器名称：</span> -->
-        <el-select v-model="value" filterable placeholder="请选择" class="head_select_zt" @change="get_Instrument">
+        <el-select v-model="value" filterable placeholder="请选择" size='mini' class="head_select_zt" @change="get_Instrument">
           <el-option
             v-for="item in slexs_1"
             :key="item.value"
@@ -43,17 +43,29 @@
         <el-button type="primary" id="export_Data" class="fot_MicYH btn_cck_1" @click="out_data()">导出数据</el-button>
       </el-form-item>
       <el-form-item  align="right" class='fr'>
+        <!-- 备忘录 -->
+        <span class='memorandum' @click='openAddMemorandumDialog' ></span>
         <el-button-group class="btn_tab">
-          <el-button type="primary" class='active'  @click="data_Updata()">曲线展示</el-button>
-          <el-button type="primary"  @click="data_Updata()">数据展示</el-button>
+          <el-button type="primary"  :class='{active: chartOrData}'  @click="chooseChartOrTable()">曲线展示</el-button>
+          <el-button type="primary" :class='{active: !chartOrData}'  @click="chooseChartOrTable()">数据展示</el-button>
         </el-button-group>
       </el-form-item>
     </el-form>
+    <el-dialog :visible.sync='memorandumDialog' title='添加备忘录' class='addMemorandum'>
+      <div class='dialogContent'>
+        <span>描述：</span>
+        <textarea v-model='memorandumContext' name="" id="" cols="30" rows="10" required></textarea>
+      </div>
+      <div class='dialogFooter'>
+        <el-button @click='AddMemorandumClick'>保存</el-button>
+        <!-- <el-button>取消</el-button> -->
+      </div>
+    </el-dialog>
     <el-row :span="24" id="canvas_html_img">
       <el-row :span='24' id='hideenText'  style='text-align: center; color:#666;margin-top: 5px; opacity:0' >{{ hiddenImgName }}</el-row>
       <el-row v-if="TexNull == true" style="text-align:center;color:#999;line-height:290px;">该段时间暂无数据,请重新选择时间</el-row>
-      <el-row :span="24" class="tab_Cls active" >
-        <el-row class='singleChannel'>
+      <el-row :span="24" class="tab_Cls " :class='{isHidden: !chartOrData}' >
+        <el-row class='singleChannel' :class='{isHidden: !channelHide }' >
           <el-row>
             <template>
               <table border='0' width="100%" cellpadding="0" cellspacing="0" class="data_Anlyera">
@@ -67,7 +79,7 @@
                     <th colspan="3">{{ Anlyera_tab_had[0].endTime }}</th>
                   </tr>
                 </thead>
-                <tbody v-for="Datas in DataAnalyzer" class="tbd_bg">
+                <tbody v-for="(Datas, idx) in DataAnalyzer" class="tbd_bg" :key='idx'>
                   <tr>
                     <td>{{ Datas.Analyzer }}</td>
                     <td>{{ Datas.record }}</td>
@@ -90,7 +102,7 @@
             </el-col> -->
           </el-row>
         </el-row>
-        <el-row class='doubleChannel isHidden'>
+        <el-row class='doubleChannel ' :class='{isHidden: channelHide }' >
           <el-col :span='24' id='wenshiChart' style='height: 560px; ' :style='{width: wenshiWidth+"px" }'>
           
           </el-col>
@@ -102,7 +114,7 @@
           </el-col>
         </el-row>
       </el-row>
-      <el-row :span="24" class="tab_Cls padin_tab" :gutter="20" >
+      <el-row :span="24" class="tab_Cls padin_tab" :gutter="20" :class='{isHidden: chartOrData}' >
         <el-col :span="17" class="hide_TF">
           <template>
             <el-table
@@ -112,7 +124,7 @@
               style="width: 100%">
               <el-table-column
                 prop="name"
-                label="仪器名称" min-width='150'>
+                label="仪器名称" min-width='130'>
               </el-table-column>
               <el-table-column
                 prop="channel_num"
@@ -121,7 +133,7 @@
               <el-table-column
                 prop="gather_data"
                 label="采集时间" 
-                sortable min-width='150'>
+                sortable min-width='130'>
               </el-table-column>
               <el-table-column
                 prop="tmp_data"
@@ -217,7 +229,7 @@ var oneday = 1000 * 60 * 60 * 24;
   import html2canvas from 'html2canvas'
   import qs from 'qs'
 
-  import { Data_Instrument,DataAnalyzer,DataStat,PieExceed,OutData,historyPageList } from '../../api/api'
+  import { Data_Instrument,DataAnalyzer,DataStat,PieExceed,OutData,historyPageList, GetMemorandumAdd } from '../../api/api'
   
   // 分析评估
   export default {
@@ -273,9 +285,11 @@ var oneday = 1000 * 60 * 60 * 24;
         opacity: 0,
         hiddenImgName: null,  // 导出的图片名称
         tabShow: true,
-        chartOrData: false,    //  true数据展示 or  false 曲线展示 
+        chartOrData: true,    //  true曲线展示 or  false  数据展示
         channelHide: true,   // true显示单通道，false显示温湿度数据综合
-        wenshiWidth: null
+        wenshiWidth: null,
+        memorandumDialog: false,    // 添加备忘录弹窗
+        memorandumContext: ''       // 备忘录内容
       } 
     },
     props: ['dateType'],
@@ -291,13 +305,16 @@ var oneday = 1000 * 60 * 60 * 24;
         $('.singleChannel').addClass('isHidden');
         $('.doubleChannel').removeClass('isHidden');
       },
+      chooseChartOrTable() {
+        this.chartOrData = !this.chartOrData;
+      },
       data_Updata: function(){// 从它开始 => 点击事件 => 获取数据的方法
         // console.log(this.$store.state.NewID)
         // console.log(this.S_value_data)  //判断查询所发送的数据是否为空
         // this.potDateID()
         // if(this.$route.path == '/historyData'){
           // console.log(this.$route.path);
-          this.chartOrData = !this.chartOrData;
+          
           if(new Date(this.S_value_data).getTime() > new Date(this.N_value_data_ed).getTime() || this.S_value_data == '' || this.N_value_data_ed == '' || this.S_value_data == undefined || this.N_value_data_ed == undefined){
               this.$message({
                     type:'warning',
@@ -306,10 +323,11 @@ var oneday = 1000 * 60 * 60 * 24;
           }else{
             this.loading = true;
             if( this.S_value_data != '' && this.N_value_data_ed != '' && this.Instrument_ID != undefined ){
-              if( this.$store.state.NewID != '' && this.$store.state.NewID != null ){
-                this.value = this.$store.state.NewID;
-                this.getDataA(this.$store.state.NewID);
-                this.listSn = this.$store.state.NewID;
+              if( this.$store.state.historySn !== '' && this.$store.state.historySn !== null ){
+                this.value = this.$store.state.historySn;
+                this.getDataA(this.$store.state.historySn);
+                this.listSn = this.$store.state.historySn;
+                // this.$store.state.historySn = null;
                 // console.log(this.listSn);
               }else{
                 // console.log(this.Instrument_ID);
@@ -340,7 +358,7 @@ var oneday = 1000 * 60 * 60 * 24;
               'endTime': this.timeFormatter(this.N_value_data_ed),
               'sn': SnID
             };
-
+            
             // console.log(this.$refs.data_Bigin.displayValue)
             // console.log(this.potDate)
             // console.log(S_NewData,this,N_NewData)
@@ -350,6 +368,14 @@ var oneday = 1000 * 60 * 60 * 24;
               // 添加图表
               // this.addClass_ID(data);
               // console.log(data)
+              /**@augments
+               * 修改选择矿的值，并赋值为null
+               */
+              if(this.$store.state.historySn !== null) {
+                this.value = this.$store.state.historySn;
+                this.$store.state.historySn = null;
+              }
+              
               if( data != null && data != '' ){
                 this.picName = data[0].IName;
               }else{
@@ -638,18 +664,39 @@ var oneday = 1000 * 60 * 60 * 24;
       potDateID: function() {// 可定义成全局函数
         // 获取展厅的id
         var zhantingID = this.$store.state.zhantingID;
+        console.log('---仪器列表')
         // 将id传到后台并获取仪器数据列表
         var potDateID_arry = {'groupID': zhantingID};
         Data_Instrument(potDateID_arry).then(rel => {
           console.log(rel);
-          this.value = rel[0].name;
-          this.value = rel[0].sn;
-          this.$store.state.ModifySn = rel[0].sn;
-          this.hiddenImgName = rel[0].name + ' ' + rel[0].sn;
+          // if(this.$store.state.historySn === null || this.$store.state.historySn === '') {
+            // console.log('---budengyukong')
+            // if(this.$store.state.historySn == null) {
+              this.value = rel[0].name;
+              this.value = rel[0].sn;
+              this.Instrument_ID = rel[0].sn;
+              this.$store.state.ModifySn = rel[0].sn;
+              this.hiddenImgName = rel[0].name + ' ' + rel[0].sn;
+           
+            
+          // }
+          // this.$store.state.ModifySn = this.$store.state.historySn;
+          // this.$store.state.historySn = null;
+          
+          
            // console.log(this.hiddenImgName);
-          this.Instrument_ID = rel[0].sn;
+          // this.Instrument_ID = rel[0].sn;
           this.slexs_1 = [];
           for (var i = 0; i < rel.length; i++) {
+            if(rel[i].sn == this.Instrument_ID) {
+              this.hiddenImgName = rel[i].name + ' ' + rel[i].sn;
+              this.slexs_1.push(
+                {
+                  'value': rel[i].sn,
+                  'label': rel[i].name
+                }
+              )
+            };
             this.slexs_1.push(
               {
                 'value': rel[i].sn,
@@ -657,7 +704,13 @@ var oneday = 1000 * 60 * 60 * 24;
               }
             )
           };
-          this.data_Updata();
+          // console.log(this.$route.path)
+          if(this.$store.state.historySn == null && this.$route.path == '/historyData') {
+            console.log('--执行----')
+            this.data_Updata();
+            // this.$store.state.historySn = null;
+          }
+          
         })
       },
 
@@ -1035,15 +1088,16 @@ var oneday = 1000 * 60 * 60 * 24;
         });
       },
       clickTab: function(){
-        $('.btn_tab>button').on('click',function(){
-          let inx = $(this).index();
-          $(this).addClass('active').siblings().removeClass('active')
-          $('.tab_Cls').eq([inx]).addClass('active').siblings().removeClass('active')
-        })
+        // $('.btn_tab>button').on('click',function(){
+        //   let inx = $(this).index();
+        //   $(this).addClass('active').siblings().removeClass('active')
+        //   $('.tab_Cls').eq([inx]).addClass('active').siblings().removeClass('active')
+        // })
       },
       PieExceed_data: function(Name,IName,LenData,SersData){//pie图
         this.$nextTick(function () {
           //基于准备好的dom，初始化echarts实例
+          console.log(document.getElementById('chartPie'));
           this.chartPie = echarts.init(document.getElementById('chartPie'));
           this.chartPie.setOption({
               title: {
@@ -1110,20 +1164,25 @@ var oneday = 1000 * 60 * 60 * 24;
       },
       data_End: function(val){
           var newDate = new Date();
+          console.log('endtime')
+          console.log(val);
           var chooseDate = new Date(Date.parse(val.replace(/-/g, "/")));
           var stopDateTime = new Date(Date.parse(val.replace(/-/g, '/')));
+          console.log(stopDateTime)
               stopDateTime.setHours(23);
               stopDateTime.setMinutes(59);
               stopDateTime.setSeconds(59);
           if(chooseDate.setHours(0,0,0,0) == newDate.setHours(0,0,0,0)){
-              this.N_value_data_ed = this.formatDateTime(new Date());
+              this.N_value_data_ed = new Date();
           }else{
-              this.N_value_data_ed = this.formatDateTime(stopDateTime);
+              this.N_value_data_ed = stopDateTime;
           }
         // this.N_value_data_ed = val;
       },
-      formatDateTime(val){
-        var date = new Date(val);
+      formatDateTime(time){
+        console.log('formatTIME')
+        console.log(time);
+        var date = new Date(Date.parse(time.replace(/-/g,"/")));
         // console.log(date);
         var y = date.getFullYear();
         var m = date.getMonth() + 1;
@@ -1154,6 +1213,48 @@ var oneday = 1000 * 60 * 60 * 24;
         $('.content-wrapper').css({'height':hh - 90 - 32,'overflow-y':'auto'});
         $('#canvas_html_img').height(hh - 90 - 32 -70 );
         $('#chartPie').width(320);
+      },
+      openAddMemorandumDialog() {    //打开备忘录弹窗
+        this.memorandumDialog = true;
+      },
+      AddMemorandumClick() {   // 保存备忘录
+        // console.log(this.S_value_data +'---开始');
+        // console.log(this.N_value_data_ed + '---结束');
+        console.log(this.$store.state.zhantingID);
+        // console.log(this.memorandumContext == '')
+        if(this.memorandumContext == '' || this.memorandumContext == null) {
+          this.$message({
+            type: 'error',
+            message: '请添加描述！！！'
+          })
+        } else {
+          var params = {
+            Usn: this.value,
+            beginTime: this.S_value_data,
+            endTime: this.N_value_data_ed,
+            describe: this.memorandumContext,
+            Entrance: '历史数据',
+            GROUP_ID: this.$store.state.zhantingID
+          };
+          GetMemorandumAdd(params).then(res => {
+            console.log(res);
+            if(res == true) {
+              this.$message({
+                type: 'success',
+                message: '保存成功！！！'
+              })
+              this.memorandumDialog = false;
+              this.memorandumContext = '';
+            } else {
+              this.$message({
+                type: 'error',
+                message: '保存失败！！！'
+              })
+            }
+          })
+        }
+        
+
       }
     },
     updated:function(){
@@ -1167,25 +1268,31 @@ var oneday = 1000 * 60 * 60 * 24;
         $('.hide_TF').show();
       }
       // console.log($('.btn_tab>button'));
-      this.clickTab();
+      // this.clickTab();
     },
     mounted: function(){
       //初始化函数
       //初始化并调用 potDateID 函数 => 通过展厅id进行数据获取
       // 监听事件 调用 => ID监听
       // console.log(this.chartOrData);
-      this.potDateID(this);
+      this.$nextTick(function(){
+        this.potDateID(this);
+      });
+        
+
+      
       let _this = this;
       this.windowResize();
       this.$store.watch(
         function(state) {
             return state.zhantingID;
-            return state.NewID;
+            return state.historySn;
         },
         function() {
-            // _this.data_Updata();
+          // if(_this.$route.path == '/historyData') {
             _this.potDateID();
-            // _this.get_Instrument();
+          
+               
       });
       
       window.onresize = function(){  
@@ -1194,8 +1301,28 @@ var oneday = 1000 * 60 * 60 * 24;
     },
     activated(){
       // this.value = this.$store.state.NewID;
-      if(this.$store.state.NewID != '' && this.$store.state.NewID != ''){
-        this.potDateID();
+      console.log('----历史数据')
+      console.log(this.$store.state.historySn)
+      if (this.$store.state.historySn !== null && this.$store.state.historySn !== '') {
+        // console.log(this.$store.state.historySn)
+        console.log('----历史数据----')
+        this.S_value_data = this.formatDateTime(this.$store.state.startDate);
+        this.N_value_data_ed = this.formatDateTime(this.$store.state.endDate);
+        console.log(this.N_value_data_ed)
+        this.value = this.$store.state.historySn;
+        this.Instrument_ID = this.$store.state.historySn;
+        this.$nextTick(function(){
+          this.potDateID();
+          this.data_Updata();
+        });
+
+        
+        
+        
+        
+      } else {
+        console.log('---什么都没有---')
+        this.potDateID(this);
       }
       
     }
@@ -1203,8 +1330,31 @@ var oneday = 1000 * 60 * 60 * 24;
   }
 </script>
 
-<style type="text/css" >
-
+<style type="text/css" lang='scss'>
+.addMemorandum {
+  .el-dialog .el-dialog__header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+    background: #eff3f8;
+  }
+  .dialogContent {
+    padding: 20px 0;
+    span {
+      display: inline-block;
+      vertical-align: top;
+    }
+    textarea {
+      width: 350px;
+      height: 150px;
+      outline: none;
+      border: 1px solid #666;
+    }
+  }
+  .dialogFooter {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+}
 .myDate input {
     height: 24px;
     text-indent: 0;
@@ -1240,10 +1390,11 @@ var oneday = 1000 * 60 * 60 * 24;
 }
 .isHidden {
   display: none;
+  // visibility:hidden
 }
     .el-select.head_select_zt>.el-input>input,
     .el-date-editor.data_inPut_Pic>input{
-      min-width: 160px;
+      min-width: 120px;
       padding: 0;
       height: 24px;
       text-indent: 1em;
@@ -1251,6 +1402,9 @@ var oneday = 1000 * 60 * 60 * 24;
       border: 1px solid #ddd;
       border-radius: 2px;
       color: #666;
+    }
+    .el-button+.el-button {
+      margin-left: 0;
     }
     .el-date-editor.data_inPut_Pic>input{
       max-width: 165px;
@@ -1261,11 +1415,20 @@ var oneday = 1000 * 60 * 60 * 24;
       /*height: 300px;*/
     }
     .tab_Cls{
-      display: none;
+      // display: none;
       height: 100%;
     }
     .tab_Cls.active{
       display: block;
+    }
+    .el-form-item .memorandum {
+      display: inline-block;
+      width: 26px;
+      height: 26px;
+      vertical-align: middle;
+      margin-right: 5px;
+      cursor: pointer;
+      background: url('../../../static/img/eqitIcon.png') no-repeat;
     }
     .btn_tab>button{
       background: #fff;

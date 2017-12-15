@@ -203,6 +203,7 @@ export default {
                 wenwuDetail: Object, //文物介绍信息
                 LOGGER: Object, //文物监测信息
                 relicNum: Number, //文物总数
+                relicIdNum: [],   // 文物ID数组
                 chartPieCurve: null, //预警统计饼图
                 chartCurve: null, //温湿度折线图
                 maximumMinimum: Object, //最大值、最小值、平均值
@@ -459,21 +460,36 @@ export default {
                     groupID: '',
                     Name: '',
                     Type: '',
-                    pageSize: 5, 
+                    pageSize: 1000, 
                     pageIndex: 0
                 };
                 wenwuList(Num).then(res => {
-                    // console.log(res);
+                    console.log(res);
+                    this.relicIdNum = [];
                     for(var i in res){
-                        // console.log(i);
+                        console.log(i);
                         this.relicNum = i;
+                        for(let item of res[i]) {
+                            this.relicIdNum.push(item.RELIC_ID);
+                        }
+                        
                     }
                     
                 });
                 
             },
             relicPrev() { //上一文物
-                if (this.$route.params.id == 1) { //到第一个文物时则停止“上一文物”
+                var paramsId = this.$route.params.id;
+                let number = null;
+                // console.log(this.relicIdNum);
+                for(let key of Object.keys(this.relicIdNum)) {
+                    // console.log(key);
+                    if(this.relicIdNum[key] == paramsId) {
+                        number = key;
+                    }
+                }
+                // console.log(number);
+                if(number == 0) {
                     this.$message({
                         showClose: true,
                         message: '这已经是第一件文物了！',
@@ -481,27 +497,36 @@ export default {
                     });
                     return;
                 } else {
-                    var id = this.$route.params.id--;
-                    // var windowUrl = window.location.href;
-                    // var reg = /particulars\/(\w+)/;
-                    // // var reg1 = '/(\w.+\/particulars)\/' + id + '/';
-                    // var paramsID = windowUrl.match(reg);
-                    // var id = parseInt(paramsID[1])-1;
-                    // var replaceUrl = 'particulars/' + id;
-                    // var changeUrl = windowUrl.replace(paramsID[0], replaceUrl);
-                    // window.history.pushState({}, 0, changeUrl);
-                    // this.$route.params.id = paramsID[1];
-                    // console.log(paramsID);
-                    // console.log(changeUrl);
-                    // console.log(replaceUrl);
-                    // this.$route.params.id--;
-                    this.$router.push({ name: '文物详情', params:{id: this.$route.params.id--}});
-                    // this.getData();
-                    // this.queryData();
+                    console.log(this.relicIdNum[number--]);
+                    this.$router.push({ name: '文物详情', params:{id: this.relicIdNum[number--]}});
                 }
+                // if (this.$route.params.id == 1) { //到第一个文物时则停止“上一文物”
+                    // this.$message({
+                    //     showClose: true,
+                    //     message: '这已经是第一件文物了！',
+                    //     type: 'warning'
+                    // });
+                    // return;
+                // } else {
+                //     var id = this.$route.params.id--;
+
+                //     this.$router.push({ name: '文物详情', params:{id: this.$route.params.id--}});
+                //     // this.getData();
+                //     // this.queryData();
+                // }
             },
             relicNext() { //下一文物
-                if (this.$route.params.id == this.relicNum) { //到最后一个文物时则停止“下一文物”
+                var paramsId = this.$route.params.id;
+                let number = null;
+                // console.log(this.relicIdNum);
+                for(let key of Object.keys(this.relicIdNum)) {
+                    // console.log(key);
+                    if(this.relicIdNum[key] == paramsId) {
+                        number = key;
+                    }
+                }
+                // console.log(number);
+                if(number == this.relicIdNum.length- 1) {
                     this.$message({
                         showClose: true,
                         message: '这已经是最后一件文物了！',
@@ -509,23 +534,24 @@ export default {
                     });
                     return;
                 } else {
-                    console.log(this.$route.path);
-                    var id = this.$route.params.id++ ;
-                    // console.log(id)
-                    // this.$route.push('/particulars'+id);
-                    // var windowUrl = window.location.href;
-                    // var reg = /particulars\/(\w+)/;
-                    // // var reg1 = '/(\w.+\/particulars)\/' + id + '/';
-                    // var paramsID = windowUrl.match(reg);
-                    // var id = parseInt(paramsID[1])+1;
-                    // var replaceUrl = 'particulars/' + id;
-                    // var changeUrl = windowUrl.replace(paramsID[0], replaceUrl);
-                    // window.history.pushState({}, 0, changeUrl);
-                    // this.$route.params.id = paramsID[1];
-                    this.$router.push({ name: '文物详情', params:{id: this.$route.params.id++}});
-                    // this.getData();
-                    // this.queryData();
+                    console.log(this.relicIdNum[number++]);
+                    this.$router.push({ name: '文物详情', params:{id: this.relicIdNum[number++]}});
                 }
+                // if (this.$route.params.id == this.relicNum) { //到最后一个文物时则停止“下一文物”
+                //     this.$message({
+                //         showClose: true,
+                //         message: '这已经是最后一件文物了！',
+                //         type: 'warning'
+                //     });
+                //     return;
+                // } else {
+                //     console.log(this.$route.path);
+                //     var id = this.$route.params.id++ ;
+
+                //     this.$router.push({ name: '文物详情', params:{id: this.$route.params.id++}});
+                //     // this.getData();
+                //     // this.queryData();
+                // }
             },
             changeRouter(){  // 监听路由变化，浏览器的后退问题
                 // console.log('1234');

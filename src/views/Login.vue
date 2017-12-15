@@ -130,7 +130,7 @@
         scanCode:false,
         loginMuseumImg:'../../static/img/LoginLogo.png',  //  公共的文字图片
         // loginImg: '../../static/img/huato.JPG',    // 公司logo
-        // loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
+        loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
         // loginImg: '../../static/img/shenboLoginLogo.png',   // 深博的登录页背景
         // loginImg: '../../static/img/guoboLoginLogo.png',   // 国博的登录页背景
         // loginImg: '../../static/img/chongxinLoginLogo.jpg',   // 崇信的登录页背景
@@ -141,13 +141,14 @@
         // loginImg: '../../static/img/jinchang.jpg',   // 金昌的登录页背景
         // loginImg: '../../static/img/tianshui.jpg',   // 天水的登录页背景
         // loginImg: '../../static/img/qingchengLogin.png',     // 庆城的登录页背景
-        loginImg: '../../static/img/mianyangLoginLogo.png',     // 绵阳的登录页背景
-        qrcode: false,     // 二维码开关 ， true为显示
+        // loginImg: '../../static/img/mianyangLoginLogo.png',     // 绵阳的登录页背景
+        // loginImg: '../../static/img/haishangsichouLogin.jpg',     // 广东海上丝绸之路的登录页背景
+        // loginImg: '../../static/img/anhuiLogin.png',   // 安徽的登录页背景
+        qrcode: true,     // 二维码开关 ， true为显示
         hideCode: false,    // 隐藏验证码，true隐藏     国博隐藏
         // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
-        // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
-        // codeVal: 'http://10.10.120.65:8082',              // 二维码文字  国博
-        codeVal: 'http://huato.net:8022',               // 国博
+        codeVal: 'http://192.168.90.157:8082',              // 二维码文字  南博
+        // codeVal: 'http://huato.net:8022',               // 国博 
         // codeVal: 'http://huato.net:8013',                 // 展会
         QrLogoSrc: '../../static/img/LOGO182.png'    //  logo 
       };
@@ -193,6 +194,7 @@
                     }
                       sessionStorage.setItem('user', JSON.stringify(user));
                       this.$router.push({ path: '/real' });
+                      // this.$router.push({ path: '/historyData' });  //国博
                       console.log(sessionStorage.getItem('user'))
                   }
                 });

@@ -236,7 +236,7 @@ var oneday = 1000 * 60 * 60 * 24;
 			},
 			Wear_UpData: function(data){
 				//   name Tmp_data_Max  Tmp_data_Min Vaio_data_Tmp wave_data_Tmp Huid_data_Max Huid_data_Min Vod_data_Huid Wave_data_Huid
-				// console.log(data);
+				console.log(data);
 				if( data != '' ){
 					data = data.sort(function(a, b){  // 按名字排序							
 						return (a[0]).localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'});
@@ -247,10 +247,10 @@ var oneday = 1000 * 60 * 60 * 24;
 							"name": data[i][0],
 							"Tmp_data_Max": data[i][1],
 							"Tmp_data_Min":data[i][2],
-							"Vaio_data_Tmp":data[i][3],
+							"Vaio_data_Tmp":data[i][5],
 							"wave_data_Tmp":data[i][7],
-							"Huid_data_Max":data[i][4],
-							"Huid_data_Min":data[i][5],
+							"Huid_data_Max":data[i][3],
+							"Huid_data_Min":data[i][4],
 							"Vod_data_Huid":data[i][6],
 							"Wave_data_Huid":data[i][8]
 						})

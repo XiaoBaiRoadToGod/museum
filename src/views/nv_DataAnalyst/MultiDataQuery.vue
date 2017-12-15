@@ -6,7 +6,20 @@
 			<el-button @click="outDataMultiAll" class="btn_Search_all">导出数据</el-button>
 			<el-button @click="html2CanvasMultiAll" class="btn_Search_all">导出图片</el-button>
 			<div class='goBack' @click='$router.back(-1)'></div>
+			<!-- 备忘录 -->
+			<span class='memorandum' @click='openAddMemorandumDialog' ></span>
+			
 		</el-col>
+		<el-dialog :visible.sync='memorandumDialog' title='添加备忘录' class='addMemorandum'>
+			<div class='dialogContent'>
+				<span>描述：</span>
+				<textarea v-model='memorandumContext' name="" id="" cols="30" rows="10" required></textarea>
+			</div>
+			<div class='dialogFooter'>
+				<el-button @click='AddMemorandumClick'>保存</el-button>
+				<!-- <el-button>取消</el-button> -->
+			</div>
+		</el-dialog>
 		<el-col id="canvas_html_img" :span="24">
 			<el-col :span="24" v-if="showhied_TF == true">
 				<section class="null_data">暂无数据！ 请重新选择仪器或者时间段！</section>
@@ -46,16 +59,19 @@
 				</el-row>
 				<el-row class="box_pad_min"  :class='{isHide: !channelHide}'>
 					<el-col :span="24">
-						<el-col :span="22">
-							<el-col :span='24' v-if="MaxDataChatLine <= 2" v-for="(inx,chat) in MaxDataChatLine" :name="inx" :class="'Chart' + inx" :id="'Chart' + inx" style="height:280px;"  :key="chat" :style='{width:twoChannelWidth}'>
+						<el-col :span="21" v-if="MaxDataChatLine <= 2">
+							<el-col :span='24'  v-for="(inx,chat) in MaxDataChatLine" :name="inx" :class="'Chart' + inx" :id="'Chart' + inx" style="height:280px;"  :key="chat" :style='{width:twoChannelWidth}'>
 									<!-- <p>chat{{inx}}{{chat}}</p> -->
 							</el-col>
-							<el-col :span='12' v-if="MaxDataChatLine > 2"  v-for="(inx,chat) in MaxDataChatLine" :name="inx" :class="'Chart' + inx" :id="'Chart' + inx" style="height:280px;display:inline-block"  :key="chat" :style='{width:threeChannelWidth}'>
+							
+						</el-col>
+						<el-col :span='21' v-if="MaxDataChatLine > 2" >
+							<el-col :span='12'  v-for="(inx,chat) in MaxDataChatLine" :name="inx" :class="'Chart' + inx" :id="'Chart' + inx" style="height:280px;display:inline-block"  :key="chat" :style='{width:threeChannelWidth}'>
 								<!-- <p>chat{{inx}}{{chat}}</p> -->
 							</el-col>
 						</el-col>
-						<el-col :span="2" class="box_pad_max_h">
-							<section v-for="(inx,colr) in ChartLineColorNumber" class="overText">
+						<el-col :span="3" class="box_pad_max_h">
+							<section v-for="(inx,colr) in ChartLineColorNumber" :key='colr' class="overText">
 								<span class="box_size" :style="{background: ChartLineColor[colr]}"></span><span class="font_size_min">{{ ChartLineColorName[colr] }}</span>
 							</section>
 						</el-col>
@@ -164,7 +180,7 @@ var oneday = 1000 * 60 * 60 * 24;
   import shine from '../../../static/js/shine.js'
   import html2canvas from 'html2canvas'
   import qs from 'qs'
-  import { Data_Instrument,MultiData,TabMulti,multiDataOutExl } from '../../api/api'
+  import { Data_Instrument,MultiData,TabMulti,multiDataOutExl, GetMemorandumAdd } from '../../api/api'
   
   // Vue.prototype.$echarts = echarts 
  
@@ -220,6 +236,8 @@ var oneday = 1000 * 60 * 60 * 24;
 				chooseSheBeiVerId: null,             // 选择的设备的verid  用于判断是否为同一类型 
 				chooseContShow: false,               // true为显示选择参考设备的容器
 				chooseReferenceData: [],             // 存放选择参考设备的数据
+				memorandumDialog: false,    // 添加备忘录弹窗
+        		memorandumContext: ''       // 备忘录内容
 			}
 		},
 		props: ['dateType'],
@@ -435,96 +453,96 @@ var oneday = 1000 * 60 * 60 * 24;
 				// console.log(chartData);
 				this.$nextTick(function () {
 			        this.chartLine = echarts.init(document.getElementById('humitureData'), 'shine');
-			        	this.chartLine.setOption({
-			        		tooltip: {
-			        			trigger:'axis',
-			        			axisPointer: {
-			        				type:'',
-			        				crossStyle: {
-			        					color: '#666'
-			        				}
-			        			},
-			        			formatter:function(params){
-	                   			  	// console.log(params);
-	                   			  	var date = params[0].axisValue;
-	                   			  	var date_before = date.split('\n')[0];
-					          		var date_after = date.split('\n')[1];
-	                   			  	var temp =  date_after +' '+ date_before + '<br />';
-	                   			  	for(var i = 0; i < params.length; i++){
-	                   			  		var data = params[i].data;
-	                   			  		// console.log(typeof(data))
-	                   			  		if(data.toString().indexOf('.') != -1){
-	                   			  			var folatLength = data.toString().split('.')[1].length;
-		                   			  		if(folatLength > 3 || typeof(data) == 'number'){
-		                   			  			temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+ params[i].color +'"></span>'+params[i].seriesName+': - <br />';
-		                   			  		}else{
-		                   			  			temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+params[i].color +'"></span>'+ params[i].seriesName+': '+params[i].data+'<br />';
-		                   			  		}
-	                   			  		}else{
-	                   			  			temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+params[i].color +'"></span>'+ params[i].seriesName+': '+params[i].data+'<br />';
-	                   			  		}
-	                   			  		
-	                   			  	}
-	                   			  	// console.log(temp);
-	                   			  	return temp;
-	                   			  }
-			        		},
-			        		grid:{
-			        			right: '20%',
-			        			left: '5%'
-			        		},
-			        		toolbox: {
-			        			itemSize: 25,
-					            width: '20%',
-					            right: '25%',
-					            show: false,
-					            feature: {
-					                dataZoom: {
-					                    yAxisIndex: 'none'
-					                },
-					                restore: {},
-					                saveAsImage: { show: false }
-					            }
-			        		},
-			        		legend: {
-			        			align: 'left',
-			        			orient: 'vertical',
-			        			right: '0',
-			        			top: '5%',
-			        			data: legend
-			        		},
-			        		xAxis: [
-			        			{
-			        				boundaryGap: false,
-			        				type: 'category',
-			        				data: dataTime.map(function (str) {
-			        					// console.log(str);
-			        					var str_before = str.split(' ')[0];
-				          				var str_after = str.split(' ')[1];
-				          				return str_after + '\n' + str_before;
-						                // return str.replace(' ', '\n')
-						            })
-			        			}
-			        		],
-			        		dataZoom: [
-				                {
-				                    type: 'slider',
-				                    show: false,
-				                    start: 0,
-				                    end: 100,
-				                    handleSize: 15,
-				                    height: '5%',
-				                    filterMode: 'empty',
-				                    bottom: '0',
-				                    showDetail:false
-				                }
-				            ],
-				            calculable : true,
-				            lineWidth:1.5,
-			        		yAxis: yAxisData,
-			        		series:chartData,
-			        		// color:this.turehumiColor
-			        	},true)
+					this.chartLine.setOption({
+						tooltip: {
+							trigger:'axis',
+							axisPointer: {
+								type:'',
+								crossStyle: {
+									color: '#666'
+								}
+							},
+							formatter:function(params){
+								// console.log(params);
+								var date = params[0].axisValue;
+								var date_before = date.split('\n')[0];
+								var date_after = date.split('\n')[1];
+								var temp =  date_after +' '+ date_before + '<br />';
+								for(var i = 0; i < params.length; i++){
+									var data = params[i].data;
+									// console.log(typeof(data))
+									if(data.toString().indexOf('.') != -1){
+										var folatLength = data.toString().split('.')[1].length;
+										if(folatLength > 3 || typeof(data) == 'number'){
+											temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+ params[i].color +'"></span>'+params[i].seriesName+': - <br />';
+										}else{
+											temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+params[i].color +'"></span>'+ params[i].seriesName+': '+params[i].data+'<br />';
+										}
+									}else{
+										temp += '<span style="display:inline-block;margin-right:5px;width:15px;height:10px;background-color:'+params[i].color +'"></span>'+ params[i].seriesName+': '+params[i].data+'<br />';
+									}
+									
+								}
+								// console.log(temp);
+								return temp;
+								}
+						},
+						grid:{
+							right: '20%',
+							left: '5%'
+						},
+						toolbox: {
+							itemSize: 25,
+							width: '20%',
+							right: '25%',
+							show: false,
+							feature: {
+								dataZoom: {
+									yAxisIndex: 'none'
+								},
+								restore: {},
+								saveAsImage: { show: false }
+							}
+						},
+						legend: {
+							align: 'left',
+							orient: 'vertical',
+							right: '0',
+							top: '5%',
+							data: legend
+						},
+						xAxis: [
+							{
+								boundaryGap: false,
+								type: 'category',
+								data: dataTime.map(function (str) {
+									// console.log(str);
+									var str_before = str.split(' ')[0];
+									var str_after = str.split(' ')[1];
+									return str_after + '\n' + str_before;
+									// return str.replace(' ', '\n')
+								})
+							}
+						],
+						dataZoom: [
+							{
+								type: 'slider',
+								show: false,
+								start: 0,
+								end: 100,
+								handleSize: 15,
+								height: '5%',
+								filterMode: 'empty',
+								bottom: '0',
+								showDetail:false
+							}
+						],
+						calculable : true,
+						lineWidth:1.5,
+						yAxis: yAxisData,
+						series:chartData,
+						// color:this.turehumiColor
+					},true)
 			    })
 			},
 			get_Data_Instrument: function(){
@@ -533,9 +551,9 @@ var oneday = 1000 * 60 * 60 * 24;
 				/**
 				 * 判断选择的类型是否统一
 				 */
-				 // console.log('----jinlai--');
+				 console.log(this.checkedProduct);
 				let chooseSn = this.checkedProduct;
-				// this.checkedSn = [];  // 清空
+				this.checkedSn = [];  // 清空
 				let verId = [];
 
 				for( var i = 0; i < chooseSn.length; i++){
@@ -581,7 +599,9 @@ var oneday = 1000 * 60 * 60 * 24;
 			          	// console.log(this.chooseSheBeiSn);
 			          	// this.checkedProduct = [];  // 清空
 			          	TabMulti(this.potDate).then( data => { // 表格数据
-			          		// console.log(data);
+							  // console.log(data);
+							  console.log('--表格数据');
+							  console.log(data);
 			          		this.addTab_data(data);
 			          	});
 			          	if( this.chooseSheBeiSn !== null &&  this.chooseSheBeiSn.length !== 0){  // 判断有没有选择参考设备
@@ -716,7 +736,7 @@ var oneday = 1000 * 60 * 60 * 24;
 						
 						// 补数据
 						if(this.isIdentical){
-							// console.log('bushuju')
+							console.log('bushuju')
 							// 补数据
 							// var lastNum = false;
 							for(var i = 0,len = dataMaxLength.data.length; i<len; i++){
@@ -870,7 +890,7 @@ var oneday = 1000 * 60 * 60 * 24;
 				})
 			},
 			getHoursDate(str) {
-				var date = new Date(str);
+				var date = new Date(Date.parse(str.replace(/-/g, '/')));
 				var year = date.getFullYear();
 				var Month = date.getMonth() + 1;
 				var day = date.getDate();
@@ -1074,15 +1094,16 @@ var oneday = 1000 * 60 * 60 * 24;
                     stopDateTime.setMinutes(59);
                     stopDateTime.setSeconds(59);
                 if(chooseDate.getDate() == newDate.getDate()){
-                    this.N_value_data = this.formatDateTime(new Date());
+                    this.N_value_data = new Date();
                 }else{
-                    this.N_value_data = this.formatDateTime(stopDateTime);
+                    this.N_value_data = stopDateTime;
                 }
 	        	// this.N_value_data = val;
 	      	},
 	      	formatDateTime(val){
 	      		// console.log(val);
-				var date = new Date(val);
+				var date = new Date(Date.parse(val.replace(/-/g,"/")));
+				console.log(date);
 				var y = date.getFullYear();
 				var m = date.getMonth() + 1;
 				m = m < 10 ? '0'+m : m;
@@ -1111,7 +1132,7 @@ var oneday = 1000 * 60 * 60 * 24;
 			},
 			CheckedArray: function(value){
 				// console.log(this.checkedProduct,data)
-				// console.log(value);
+				console.log(value);
 				let checkedSn = value.length;
 				this.checkAll = checkedSn === this.AssFiedSn.length;
 				// console.log(checkedSn);
@@ -1377,7 +1398,12 @@ var oneday = 1000 * 60 * 60 * 24;
 	      	formatDate:function(value) {
       		 	var date = new Date(value);
           		return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()+' '+ date.getHours()+':'+date.getMinutes();
-	      	},
+			},
+			parseDate(date) {
+				
+				return new Date(Date.parse(date.replace(/-/g, '/')));
+			
+			},
 	      	windowResize(){
                 var ww = $(document).width();
                 // console.log($('.content-container'));
@@ -1391,38 +1417,81 @@ var oneday = 1000 * 60 * 60 * 24;
                 this.threeChannelWidth = (ww-201-20-20)*0.875/2 + 'px';
                 this.humitureWidth = (ww-201-20) + 'px';
                 // console.log(this.threeChannelWidth)
-            }	
+			},
+			openAddMemorandumDialog() {    //打开备忘录弹窗
+				this.memorandumDialog = true;
+			},
+			AddMemorandumClick() {   // 保存备忘录
+				console.log(this.S_value_data +'---开始');
+				console.log(this.N_value_data + '---结束');
+				console.log(this.checkedProduct);
+				if(this.memorandumContext == '' || this.memorandumContext == null) {
+					this.$message({
+						type: 'error',
+						message: '请添加描述！！！'
+					})
+				} else {
+					var params = {
+						Usn: this.checkedProduct.join(','),
+						beginTime: this.S_value_data,
+						endTime: this.N_value_data,
+						describe: this.memorandumContext,
+						Entrance: '数据分析',
+						GROUP_ID: this.$store.state.zhantingID
+					}
+					GetMemorandumAdd(params).then(res => {
+						console.log(res)
+						if(res == true) {
+							this.$message({
+								type: 'success',
+								message: '保存成功！！！'
+							})
+							this.memorandumDialog = false;
+							this.memorandumContext = '';
+						} else {
+							this.$message({
+								type:'error',
+								message: '保存失败！！！'
+							})
+						}
+					})
+				}
+				
+			}
 		},
 		mounted:function(){
 
 			this.$nextTick(function(){this.potDateID();});
 			this.windowResize();
 			let _this = this;
-		      this.$store.watch(
-		        function(state) {
-		          return state.zhantingID;
-		          // return state.NewID;
-		        },
-		        function() {
-		          // _this.data_Updata();
-		          _this.potDateID();
-		          _this.chooseSheBei = [];
-		          _this.chooseSheBeiSn = null; // 清空参考设备
-				  _this.chooseSheBeiVerId = null; // 清空参考设备的类型id
-				  _this.chooseReferences = '选择参考设备';
-		          // _this.checkedProduct = [];
-		          // _this.ClearChecked();  // 清空以前的数据
-		          // _this.get_Instrument();
-		        }
-		      );
-		      window.onresize = function(){
-		      	_this.windowResize();
-		      }
-		      // 获取数组最大值
+			this.$store.watch(
+				function(state) {
+					return state.zhantingID;
+					return state.NewID;
+				},
+				function() {
+					// _this.data_Updata();
+					_this.potDateID();
+					_this.chooseSheBei = [];
+					_this.chooseSheBeiSn = null; // 清空参考设备
+					_this.chooseSheBeiVerId = null; // 清空参考设备的类型id
+					_this.chooseReferences = '选择参考设备';
+					// _this.checkedProduct = [];
+					// _this.ClearChecked();  // 清空以前的数据
+					// _this.get_Instrument();
+				}
+			);
+			window.onresize = function(){
+			_this.windowResize();
+			}
+			// 获取数组最大值
 
 		},
 		activated(){
+			console.log('---数据分析');
+			console.log(this.$store.state.MultiDataSn);
 			if( this.$store.state.NewID != null && this.$store.state.NewID != '' ){
+				console.log('---分组统计---跳转--')
 				this.checkedSn = [];  // 清空  只是查询单个设备 故清空
 				this.chooseSheBeiSn = null; // 清空参考设备
 				this.chooseSheBei = [];
@@ -1432,15 +1501,32 @@ var oneday = 1000 * 60 * 60 * 24;
 				this.checkedProduct = (this.$store.state.NewID).split(',');
 				// this.checkedSn = (this.$store.state.NewID).split(',');
 				console.log(this.checkedSn);
-				// console.log(this.checkedProduct);
+				console.log(this.checkedProduct);
 				// console.log(this.$store.state.NewID);
-				// console.log(this.$store.state.startDate);
+				console.log(this.$store.state.startDate);
 				// console.log(this.formatDateTime(this.S_value_data));
-				// console.log(this.N_value_data);
-				this.S_value_data = this.$store.state.startDate == null ? this.formatDateTime(this.S_value_data):this.formatDateTime(this.$store.state.startDate);
-				this.N_value_data = this.$store.state.endDate == null ? this.formatDateTime(this.N_value_data) : this.formatDateTime(this.$store.state.endDate);
+				console.log(this.N_value_data);
+				this.S_value_data = this.$store.state.startDate == null ? this.S_value_data : this.$store.state.startDate;
+				this.N_value_data = this.$store.state.endDate == null ? this.N_value_data : this.$store.state.endDate;
 				this.$store.state.NewID = '';
 				this.get_Data_Instrument();
+			} else if (this.$store.state.MultiDataSn !== null && this.$store.state.MultiDataSn !== '') {
+				console.log('---数据分析')
+				this.checkedSn = [];  // 清空  只是查询单个设备 故清空
+				this.chooseSheBeiSn = null; // 清空参考设备
+				this.chooseSheBei = [];
+				this.chooseSheBeiVerId = null; // 清空参考设备的类型id
+				this.chooseReferences = '选择参考设备';
+				this.checkedProduct = []; // 清空选择的
+				console.log(this.$store.state.startDate);
+				console.log(this.$store.state.endDate);
+				this.checkedProduct = (this.$store.state.MultiDataSn).split(',');
+				this.S_value_data = this.parseDate(this.$store.state.startDate);
+				this.N_value_data = this.parseDate(this.$store.state.endDate);
+				console.log(this.S_value_data);
+				console.log(this.N_value_data);
+				this.$store.state.MultiDataSn = null;
+        		this.get_Data_Instrument();
 			}else{
 				if( this.checkedSn != null && this.checkedSn != '' ){
 					if( !this.OFdataloading ){
@@ -1455,7 +1541,31 @@ var oneday = 1000 * 60 * 60 * 24;
 		}
 	}
 </script>
-<style>
+<style lang='scss'>
+.addMemorandum {
+  .el-dialog .el-dialog__header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+    background: #eff3f8;
+  }
+  .dialogContent {
+    padding: 20px 0;
+    span {
+      display: inline-block;
+      vertical-align: top;
+    }
+    textarea {
+      width: 350px;
+      height: 150px;
+      outline: none;
+      border: 1px solid #666;
+    }
+  }
+  .dialogFooter {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+}
 .chooseCont {
 	position: absolute;
 	width: 100%;
@@ -1744,15 +1854,26 @@ var oneday = 1000 * 60 * 60 * 24;
     }
   }
   .btn_pad{
-  	padding: 12px 40px 0;
+  		padding: 12px 40px 0;
+	  	.memorandum {
+			display: inline-block;
+			width: 26px;
+			height: 26px;
+			float: right;
+			vertical-align: middle;
+			margin-right: 5px;
+			cursor: pointer;
+			background: url('../../../static/img/eqitIcon.png') no-repeat;
+		}
   }
   .btn_pad .goBack{
   		width: 30px;
   		height:30px;
   		float: right;
   		margin-right: 20px;
+		margin-left: 20px;
   		background: url('../../../static/img/icon.png') no-repeat;
-        background-position: -19px -767px;
+        background-position: -19px -775px;
         cursor: pointer;
   }
   .box_pad_min{

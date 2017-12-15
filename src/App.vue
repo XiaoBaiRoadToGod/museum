@@ -26,7 +26,7 @@ body {
 	font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
 	font-size: 14px;
 	-webkit-font-smoothing: antialiased;
-	min-width: 1349px;
+	// min-width: 1349px;
 	position: absolute;
 	height: 100%;
 	max-width: 100%;

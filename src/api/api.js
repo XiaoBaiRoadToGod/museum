@@ -2,29 +2,31 @@ import { Promise } from 'es6-promise';
 import axios from 'axios';
 import qs from 'qs'
 
-// axios.defaults.baseURL = 'http://172.16.50.245:8080/api';  //深博
+// axios.defaults.baseURL = 'http://172.16.50.245:8080/api';    //深博
 // shenzhen 8080
-   axios.defaults.baseURL = 'http://192.168.10.68:8080/api'; 
-   // axios.defaults.baseURL = 'http://192.168.1.67:8080/api'; //展会
-   // axios.defaults.baseURL = 'http://192.168.0.106:8080/api'; //展会
+//    axios.defaults.baseURL = 'http://192.168.10.68:8080/api'; 
+   // axios.defaults.baseURL = 'http://192.168.1.67:8080/api';   //展会
+   // axios.defaults.baseURL = 'http://192.168.0.106:8080/api';   //展会
    // axios.defaults.baseURL = 'http://huato.net:8080/api'; 
-   // axios.defaults.baseURL = 'http://huato.net:8025/api'; 
-   // axios.defaults.baseURL = 'http://192.168.90.156:8080/api';   // 南博
-// axios.defaults.baseURL = 'http://10.10.120.65:8080/api';     // 国博
-// axios.defaults.baseURL = 'http://10.10.120.65:8015/api';     // 国博
-// axios.defaults.baseURL = 'http://192.168.1.220:8080/api';     // 崇信
+   axios.defaults.baseURL = 'http://huato.net:8025/api'; 
+//    axios.defaults.baseURL = 'http://192.168.90.156:8080/api';   // 南博
+// axios.defaults.baseURL = 'http://10.10.120.65:8080/api';       // 国博
+// axios.defaults.baseURL = 'http://10.10.120.65:8015/api';       // 国博   历史数据
+// axios.defaults.baseURL = 'http://192.168.1.220:8080/api';      // 崇信
 // axios.defaults.baseURL = 'http://192.168.100.200:8080/api';     // 庄浪
 // axios.defaults.baseURL = 'http://192.168.10.104:8080/api';     // 陇西
-// axios.defaults.baseURL = 'http://10.1.1.209:8080/api';     // 鄂尔多斯
+// axios.defaults.baseURL = 'http://10.1.1.209:8080/api';         // 鄂尔多斯
 // axios.defaults.baseURL = 'http://192.168.1.100:8080/api';     // 镇原
 // axios.defaults.baseURL = 'http://192.168.0.117:8080/api';     // 金昌
 // axios.defaults.baseURL = 'http://192.168.1.234:8080/api';     // 天水
 // axios.defaults.baseURL = 'http://192.168.0.254:8080/api';     // 庆城
 // axios.defaults.baseURL = 'http://192.168.1.110:8080/api';     // 绵阳
+// axios.defaults.baseURL = 'http://192.168.5.101:8080/api';     // 广东海上丝绸之路
+// axios.defaults.baseURL = 'http://192.168.6.10:8080/api';     // 安徽博物院
 // axios.defaults.baseURL = '/api';
 
 // let base = 'http://192.168.10.42:8080/api';
-// let base = 'http://huato.net:8080/api';
+// let base = 'http://huato.net:8080/api'; 
 
 export const addUser = params => { return axios.get(`/user/add`, params ); };
 
@@ -92,6 +94,13 @@ export const BenchmarkStatistics = (params) => { return axios.get(`/Evaluation/G
 export const SudukuMean = (params) => { return axios.get(`/Evaluation/GetNineSquareGraphData`, { params: params }).then( res => res.data); };
 export const YIELD = (params) => { return axios.get(`/Evaluation/GetQualifiedRateData`, { params: params }).then( res => res.data); };
 export const Wave = (params) => { return axios.get(`/Evaluation/GetFluctuateData`,{ params: params }).then( res => res.data); };
+// 备忘录---新增
+export const GetMemorandumAdd = (params) => { return axios.get(`/LogsAll/GetMemorandumAdd`, { params: params }).then(res => res.data); };
+// 备忘录--- 查询
+export const GetMemorandumAll = (params) => { return axios.get(`/LogsAll/GetMemorandumAll`, { params: params }).then(res => res.data); };
+
+
+
 //  分析评估 && => 热量场
 export const Field = (params) => { return axios.get(`/Head/GetHeatMapShow`,{ params:params }).then(res => res.data) };
 // 陈展文物--文物列表
@@ -159,6 +168,16 @@ export const AddOverviewGroupLoggers = (params) => { return axios.get(`/Analysis
 export const DeleteOverviewGroupLoggers = (params) => { return axios.get(`/Analysis/GetInstrumentCountDel`,{params,params}).then( res => res.data ); };
 // 概览   显示分组详情
 export const GetOverviewGroupDetails = (params) => { return axios.get(`/Analysis/GetInstrumentCountShow`,{params,params}).then( res => res.data ); };
+
+// 空调调控
+export const GetAirControlDetails = () => { return axios.get(`/Controller/GetConditioningAll`).then( res => res.data ); };
+
+//隐藏仪器
+export const setLoggerHide = (params) => { return axios.get(`/Login/GetDisplayAll`, {params: params}).then( res => res.data ); };
+
+//提交隐藏仪器
+export const AddsetLoggerHide = (params) => { return axios.get(`/Login/GetupdateDisplay`, {params: params}).then( res => res.data ); };
+
 
 
 

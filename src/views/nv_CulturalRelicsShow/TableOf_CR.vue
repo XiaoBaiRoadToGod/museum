@@ -135,8 +135,8 @@ import { wenwuList, wenwuListPage } from '../../api/api'
 			},
 			windowResize(){
 				var ww = $(document).width();
-				if(ww < 1366){
-					ww == 1366;
+				if(ww < 1280){
+					ww == 1208;
 				}else{
 					ww == ww;
 				}

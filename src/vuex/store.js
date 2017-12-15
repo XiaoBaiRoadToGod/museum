@@ -16,7 +16,9 @@ const state = {
     overViewName:null,  //  概览展厅名称
     GroupID:'',         //  分组统计跳转数据分析参数
     startDate:null,
-    endDate:null
+    endDate:null,
+    historySn: null,     // 保存备忘录页的跳转数据(历史数据)
+    MultiDataSn: null    // 数据分析
 }
 
 // 定义所需的 mutations
@@ -54,6 +56,12 @@ const mutations = {
     },
     ENDDATE(state, id){
         state.endDate = id;
+    },
+    HISTORYSN(state, id) {
+        state.historySn = id;
+    },
+    MULTIDATASN(state, id) {
+        state.MultiDataSn = id
     }
 
 

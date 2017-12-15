@@ -15,7 +15,7 @@ import Environmental from './views/nv_DEMU/Environmental.vue'
 // 设置
 import Pto_Relic from './views/nv_Opations/DR_Relic_childen/Pto_Relic.vue'
 import DR_Relic from './views/nv_Opations/DR_Relic.vue'
-import Help from './views/nv_Opations/Help.vue'
+//import Help from './views/nv_Opations/Help.vue'
 import ChangePassWord from './views/nv_Opations/ChangePassword.vue'
 // 分析评估
 import HistoryData from './views/nv_DataAnalyst/HistoryData.vue'
@@ -25,11 +25,20 @@ import HeatField from './views/nv_DataAnalyst/HeatField.vue'
 import MultiDataQuery from './views/nv_DataAnalyst/MultiDataQuery.vue'
 import CustomGroup from './views/nv_DataAnalyst/CustomGroup.vue'
 import MeanValue from './views/nv_DataAnalyst/HistoryData_childen/MeanValue.vue'
+import Memorandum from './views/nv_DataAnalyst/memorandum.vue'
 // 陈列文物
 import TableOf_CR from './views/nv_CulturalRelicsShow/TableOf_CR.vue'
 import Particulars from './views/nv_CulturalRelicsShow/TableOf_CR_childen/Particulars.vue'
 // 概览
 import Overviews from './views/nv_Overview/Overview.vue'
+
+// 空调调控
+import AirControl from './views/nv_AirControl/AirControl.vue'
+
+// 设置仪器隐藏
+import setLoggerHide from './views/nv_Opations/setLoggerHide.vue';
+
+
 let mode = 'history'
 let routes = [
     {
@@ -73,16 +82,30 @@ let routes = [
         }
       ]
     },
-    {
-      path: '/',
-      component: Home,
-      name: '预警平台',
-      iconCls: 'fa icon_img_lt_03',
-      children: [
-        { path: '/Statistics', component: Statistics, name: '预警统计' },
-        { path: '/Inquire', component: Inquire, name: '预警查询' }
-      ]
-    },
+    // {
+    //   path: '/',
+    //   component: Home,
+    //   name: '空调调控',
+    //   iconCls: 'fa icon_img_lt_air',
+    //   leaf: true,
+    //   children: [
+    //     {
+    //       path: '/AirControl',
+    //       component:AirControl,
+    //       name: '空调调控'
+    //     }
+    //   ]
+    // },
+    // {
+    //   path: '/',
+    //   component: Home,
+    //   name: '预警平台',
+    //   iconCls: 'fa icon_img_lt_03',
+    //   children: [
+    //     { path: '/Statistics', component: Statistics, name: '预警统计' },
+    //     { path: '/Inquire', component: Inquire, name: '预警查询' }
+    //   ]
+    // },
     {
       path: '/',
       component: Home,
@@ -94,31 +117,32 @@ let routes = [
         { path: '/CustomGroup', component: CustomGroup, name: '分组统计' },
         { path: '/MeanValue', component: MeanValue, name: '平均值', hidden: true },
         { path: '/assessment', component: Assessment, name: '综合评估' },
+        { path: '/Memorandum', component: Memorandum, name: '备忘录' },
         { path: '/childen_Chart', component: Childen_Chart, name: '', hidden: true },
         // { path: '/heatField', component: HeatField, name: '热量场' }
         
       ]
     },
-    {
-      path: '/',
-      component: Home,
-      name: '陈列文物',
-      leaf: true,
-      iconCls: 'fa icon_img_lt_05',
-      children: [
-        {
-          path: '/tableOf_CR',
-          component: TableOf_CR,
-          name: '展陈文物'
-        },
-        {
-          path: '/particulars/:id',
-          component: Particulars,
-          name: '文物详情',
-          hidden: true
-        }
-      ]
-    },
+    // {
+    //   path: '/',
+    //   component: Home,
+    //   name: '陈列文物',
+    //   leaf: true,
+    //   iconCls: 'fa icon_img_lt_05',
+    //   children: [
+    //     {
+    //       path: '/tableOf_CR',
+    //       component: TableOf_CR,
+    //       name: '展陈文物'
+    //     },
+    //     {
+    //       path: '/particulars/:id',
+    //       component: Particulars,
+    //       name: '文物详情',
+    //       hidden: true
+    //     }
+    //   ]
+    // },
     {
       path:'/',
       component: Home,
@@ -139,9 +163,10 @@ let routes = [
       rel_set: true,
       children: [
         { path: '/changePassWord', component: ChangePassWord, name: '修改密码'  },
-        { path: '/dR_Relic', component: DR_Relic, name: '导入文物信息' },
-        { path: '/pto_Relic', component: Pto_Relic, name: '导入文物图片' },
-        { path: '/help', component: Help, name: '帮助',hidden:true }
+        { path: '/setLoggerHide', component: setLoggerHide, name: '隐藏仪器' },
+        // { path: '/dR_Relic', component: DR_Relic, name: '导入文物信息' },
+        // { path: '/pto_Relic', component: Pto_Relic, name: '导入文物图片' },
+        //{ path: '/help', component: Help, name: '帮助',hidden:true }
       ]
     },
     {

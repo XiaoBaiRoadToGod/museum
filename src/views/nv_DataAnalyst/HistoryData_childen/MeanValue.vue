@@ -171,7 +171,7 @@ import echarts from '../../../../static/js/echarts';
 					// console.log(params)
 					GetMeanValue(params).then(res => {
 						this.loading = false;
-						// console.log(res);
+						console.log(res);
 						if(res.length == 0 ){
 							this.$message({
 								type:'warning',
