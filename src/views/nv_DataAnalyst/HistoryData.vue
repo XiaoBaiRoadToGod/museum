@@ -44,7 +44,7 @@
       </el-form-item>
       <el-form-item  align="right" class='fr'>
         <!-- 备忘录 -->
-        <span class='memorandum' @click='openAddMemorandumDialog' ></span>
+        <!-- <span class='memorandum' @click='openAddMemorandumDialog' ></span> -->
         <el-button-group class="btn_tab">
           <el-button type="primary"  :class='{active: chartOrData}'  @click="chooseChartOrTable()">曲线展示</el-button>
           <el-button type="primary" :class='{active: !chartOrData}'  @click="chooseChartOrTable()">数据展示</el-button>
@@ -248,7 +248,7 @@ var oneday = 1000 * 60 * 60 * 24;
             return time.getTime() > Date.now();
           }
         },
-        S_value_data: new Date(today - oneday * 7),//定义空
+        S_value_data: new Date(today - oneday * 6),//定义空
         N_value_data_ed: new Date(),
         // 通道数据
         Anlyera_tab_had:[{

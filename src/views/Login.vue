@@ -127,13 +127,13 @@
        
         verCodeError:false,
         userError: false,
-        scanCode:false,
+        scanCode: false,
         loginMuseumImg:'../../static/img/LoginLogo.png',  //  公共的文字图片
         // loginImg: '../../static/img/huato.JPG',    // 公司logo
-        loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
+        // loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
         // loginImg: '../../static/img/shenboLoginLogo.png',   // 深博的登录页背景
         // loginImg: '../../static/img/guoboLoginLogo.png',   // 国博的登录页背景
-        // loginImg: '../../static/img/chongxinLoginLogo.jpg',   // 崇信的登录页背景
+        loginImg: '../../static/img/chongxinLoginLogo.jpg',   // 崇信的登录页背景
         // loginImg: '../../static/img/zhuanglangLogin.png',   // 庄浪的登录页背景
         // loginImg: '../../static/img/longxiLoginLogo.jpg',   // 陇西的登录页背景
         // loginImg: '../../static/img/eerLoginLogo.jpg',   // 鄂尔多斯的登录页背景
@@ -146,8 +146,8 @@
         // loginImg: '../../static/img/anhuiLogin.png',   // 安徽的登录页背景
         qrcode: true,     // 二维码开关 ， true为显示
         hideCode: false,    // 隐藏验证码，true隐藏     国博隐藏
-        // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
-        codeVal: 'http://192.168.90.157:8082',              // 二维码文字  南博
+        codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
+        // codeVal: 'http://192.168.90.157:8082',              // 二维码文字  南博
         // codeVal: 'http://huato.net:8022',               // 国博 
         // codeVal: 'http://huato.net:8013',                 // 展会
         QrLogoSrc: '../../static/img/LOGO182.png'    //  logo 
@@ -190,7 +190,8 @@
                   } else {
                     let user = {
                       name:data.data.ok[0].USER_NAME,
-                      ids:data.data.ok[0].USER_GROUP_IDS
+                      ids:data.data.ok[0].USER_GROUP_IDS,
+                      level: data.data.ok[0].USER_LEVEL
                     }
                       sessionStorage.setItem('user', JSON.stringify(user));
                       this.$router.push({ path: '/real' });
@@ -222,7 +223,8 @@
                       } else {
                         let user = {
                           name:data.data.ok[0].USER_NAME,
-                          ids:data.data.ok[0].USER_GROUP_IDS
+                          ids:data.data.ok[0].USER_GROUP_IDS,
+                          level: data.data.ok[0].USER_LEVEL
                         }
                           sessionStorage.setItem('user', JSON.stringify(user));
                           this.$router.push({ path: '/real' });

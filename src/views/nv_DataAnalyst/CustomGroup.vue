@@ -60,7 +60,7 @@
 			</el-col>
 			<el-col :span='24' v-if='isTitltShow' class='titltShow'> <span>当前时间没有数据或者没有分组！</span> </el-col>
 			<el-col :span='24' v-for='(item, idx) in dataArr' :key='idx' v-if='dataArr != null'>
-				<el-col :span='12' class='TextLeft'v-if='item.id != null'>
+				<el-col :span='12' class='TextLeft' v-if='item.id != null'>
 					<span style='color:#6fb3e0'>分组：{{item.name}}</span>
 					<!-- <span>{{item.id}}</span> -->
 				</el-col>
@@ -119,7 +119,7 @@ var oneday = 1000 * 60 * 60 * 24;
         dialogVisible: false,
         data: [],
     	  allNoData: [],
-    	  startDate:new Date(today - oneday * 7),
+    	  startDate:new Date(today - oneday * 6),
     	  endDate:new Date(),
     	  pickerOptions0: {
           disabledDate(time) {
@@ -516,7 +516,7 @@ var oneday = 1000 * 60 * 60 * 24;
       	var zhantingID = this.$store.state.zhantingID;
       	var params = { 'groupID': zhantingID, SmallId:'' };
       	GetGroupLoggers(params).then(res => {
-      		// console.log(res[0]);
+      		console.log(res[0]);
       		this.allNoData = [];
       		var shebeiGroup = res[0];
       		var allshenbeiGroup = shebeiGroup.sn1;

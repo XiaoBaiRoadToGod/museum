@@ -197,7 +197,7 @@ export default {
     data() {
             return {
                 id: '',
-                startDate: new Date(today - oneday * 7), //开始日期
+                startDate: new Date(today - oneday * 6), //开始日期
                 endDate: new Date(), //结束日期
                 DetailALL: Object,
                 wenwuDetail: Object, //文物介绍信息

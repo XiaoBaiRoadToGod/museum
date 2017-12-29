@@ -102,7 +102,7 @@ export default {
                 },
                 myGrade: '',
                 myCategory: '邮件报警',
-                startDate: new Date(today - oneday * 7),
+                startDate: new Date(today - oneday * 6),
                 endDate: new Date(),
                 pickerOptions0: {
                   disabledDate(time) {

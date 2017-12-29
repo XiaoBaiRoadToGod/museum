@@ -4,7 +4,7 @@
 			<el-table :data='controlData' border stripe  class='myTable' style='width:100%'>
 				<el-table-column prop='name' label='名称' ></el-table-column>
 				<el-table-column prop='device' label='设备类型' min-width='140'></el-table-column>
-				<el-table-column prop='location' label='安装位置' ></el-table-column>
+				<!-- <el-table-column prop='location' label='安装位置' ></el-table-column> -->
 				<el-table-column label='温度(℃)' min-width='70'>
 					<template slot-scope='scope'>
 						<span :style='{color:controlData[scope.$index].Tcolor}'>{{ controlData[scope.$index].temp }}</span>
@@ -99,10 +99,10 @@
 									
 							</div>
 							
-								<span slot="footer" class="dialog-footer">
-									<el-button @click="btnCancel">取 消</el-button>
-		    						<el-button type="primary" @click="btnConfirm2">确 定</el-button>
-		    					</span>
+							<span slot="footer" class="dialog-footer">
+								<el-button @click="btnCancel">取 消</el-button>
+								<el-button type="primary" @click="btnConfirm2">确 定</el-button>
+							</span>
 						</el-dialog>
 						<!-- 加湿除湿净化一体机 -->
 						<el-dialog  :visible.sync="dialogAIO" class='myDialog' @close="btnCancel" top='8%'>
@@ -135,8 +135,11 @@
 								<div class='deviceStateCont deviceStateCont1' v-if='deviceState[0].displayNone'>
 									<span class='StateText'>水箱状态:</span><span class='stateImg'>{{deviceState[0].CompressO}}</span>
 									<span class='StateText'>风机状态:</span><span class='stateImg'>{{deviceState[0].MainBlower}}</span>
-									<span class='StateText'>运行状态:</span><span class='stateImg'>{{deviceState[0].CompressH}}</span>
+									<span class='StateText'>除湿状态:</span><span class='stateImg'>{{deviceState[0].CompressH}}</span>
+									<span class='StateText'>加湿状态:</span><span class='stateImg'>{{deviceState[0].CompressH}}</span>
 									<span class='StateText'>漏水报警:</span><span class='stateImg'><img :src="deviceState[0].AlarmState " ></span>
+									
+									
 								</div>
 								<div class='myHumidification fl' :class='{myHumidification1: deviceState[0].displayNone}'>
 									<p>{{ deviceState[0].displayNone == true ?"除湿":"除湿设置"}}</p>
@@ -217,8 +220,6 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				dehumiFloor: null,    // 除湿下限
 				addHumiCeling: null,   // 加湿上限
 				addHumiFloor:null,      // 加湿下限
-				inputHumi:null,      //输入框里面显示的湿度
-				inputTemp:null,       // 输入框里面显示的温度
 				deviceState:[{        // 存储设备状态
 					CompressH:'',
 					CompressL:'',
@@ -666,8 +667,8 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				if(state == 0){
 					shebeiState = '停止';
 				}else if(state == 1){
-					console.log('seconds---'+seconds);
-					console.log('int---'+int);
+					// console.log('seconds---'+seconds);
+					// console.log('int---'+int);
 					if(seconds > int + 100){
 						// shebeiState = '故障';
 						shebeiState = '运行';
@@ -695,8 +696,8 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 			isTrue(switchNum, switchState){
 				var user = JSON.parse(sessionStorage.getItem('user'));
 				// console.log(user);
-				var name = user.name;
-				if(name == 'admin' || name == '绵阳博物馆'){
+				var name = user.level;
+				if(name == 120){
 					if(switchNum == 0){
 						if(switchState == 0){
 							return false;
@@ -710,7 +711,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 							return true;   // 关机当中不可操作
 						}
 					}
-				}else{  // 用户名不是admin 不可操作
+				}else{  // 用户权限不是120， 不可操作
 					return true;
 				}
 				
@@ -743,9 +744,9 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 			},
 			buttonDisabled(num){  // 判断设置是否禁用
 				var user = JSON.parse(sessionStorage.getItem('user'));
-				var name = user.name;
-				if(num == 14  || (name != 'admin' && name != '绵阳博物馆') ){
-					// console.log(name != '绵阳博物馆')
+				var name = user.level;
+				console.log(name);
+				if(num == 14  || name !== 120 ){
 					return true;
 				}else{
 					return false;
@@ -796,7 +797,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 								'waterTank': res[i].LoggerTemp,                 // 水箱温度
 								'imgUrl': this.levelImg(res[i].CompressO),                      // 液位
 								'value2': this.switchBtn(res[i].Switch, res[i].SwitchState), // 判断开关机
-								'isTrue': this.isTrue(res[i].Switch, res[i].SwitchState),					  // 开关机
+								'isTrue': this.isTrue(res[i].Switch, res[i].SwitchState),		  // 开关机
 								'sn': res[i].LoggerSN,
 								'Tcolor': res[i].Tcolour,         // 温度颜色
 								'Hcolor': res[i].Hcolour,         // 湿度颜色

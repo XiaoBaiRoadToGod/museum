@@ -66,30 +66,16 @@ import { Field } from '../../api/api'
 		          deep:true
 		      })
 		    },
-		    windowResize(){
-		      var ww = $(document).width();
-		      $('.content-container').width(ww - 201);
-		      var hh = $(document).height();
-		      // console.log(hh);
-		      $('.content-wrapper').height(hh - 90 - 32);
-		    }
 		},
 		mounted:function(){
 			this.watchID_Helat(this);
 			this.get_Field_Data();
-			this.windowResize()
-			var _this = this;
-            window.onresize = function(){  
-               _this.windowResize();
-                
-            }
+
 		}
 	}
 </script>
 <style lang="scss" scoped>
-.my_padding{
-	padding:16px 11px;
-}
+
 	.pos_rea{
 		position: relative;
 		width: 100%;

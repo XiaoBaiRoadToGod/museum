@@ -6,7 +6,7 @@
 				<el-input v-model='wenwuName' placeholder='文物名称' class='wenwuInput'></el-input>
 			</el-form-item>
 			<el-form-item >
-				<el-button type='primary' @click='queryData' v-model='queryName'>查询</el-button>
+				<el-button type='primary' @click='queryData' >查询</el-button>
 			</el-form-item>
 		</el-form>
 	</el-col>

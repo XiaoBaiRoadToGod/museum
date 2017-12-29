@@ -12,9 +12,9 @@ import qs from 'qs'
 //    axios.defaults.baseURL = 'http://192.168.90.156:8080/api';   // 南博
 // axios.defaults.baseURL = 'http://10.10.120.65:8080/api';       // 国博
 // axios.defaults.baseURL = 'http://10.10.120.65:8015/api';       // 国博   历史数据
-// axios.defaults.baseURL = 'http://192.168.1.220:8080/api';      // 崇信
+// axios.defaults.baseURL = 'http://10.185.58.16:8080/api';      // 崇信
 // axios.defaults.baseURL = 'http://192.168.100.200:8080/api';     // 庄浪
-// axios.defaults.baseURL = 'http://192.168.10.104:8080/api';     // 陇西
+// axios.defaults.baseURL = 'http://192.168.20.147:8080/api';     // 陇西
 // axios.defaults.baseURL = 'http://10.1.1.209:8080/api';         // 鄂尔多斯
 // axios.defaults.baseURL = 'http://192.168.1.100:8080/api';     // 镇原
 // axios.defaults.baseURL = 'http://192.168.0.117:8080/api';     // 金昌
@@ -98,7 +98,8 @@ export const Wave = (params) => { return axios.get(`/Evaluation/GetFluctuateData
 export const GetMemorandumAdd = (params) => { return axios.get(`/LogsAll/GetMemorandumAdd`, { params: params }).then(res => res.data); };
 // 备忘录--- 查询
 export const GetMemorandumAll = (params) => { return axios.get(`/LogsAll/GetMemorandumAll`, { params: params }).then(res => res.data); };
-
+// 备忘录-- 删除
+export const MemorandumDelect = (params) =>  { return axios.get(`/LogsAll/GetMemorandumDalect`, { params: params }).then(res => res.data);}
 
 
 //  分析评估 && => 热量场

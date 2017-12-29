@@ -31,8 +31,6 @@ export default {
 			radioData: [],      // 全部的展厅
 			checkHidden: [],	// 选中隐藏仪器
 			allLogger: [],		// 全部仪器
-			checkedCities: ['上海', '北京'],
-        	cities: ['上海', '北京', '广州', '深圳'],
 		}
 	},
 	methods: {

@@ -81,6 +81,7 @@
 									v-model="item.switch"
 									on-color="#438eb9"
 									off-color="#a63830"
+									size='mini'
 									:width='50'
 									@change='switchChange($event, item.loggersn, index)'
 									>
@@ -131,6 +132,7 @@
 									v-model="item.switch"
 									on-color="#438eb9"
 									off-color="#a63830"
+									size='mini'
 									:width='50'
 									@change='switchChange($event, item.loggersn, index)'
 									>
@@ -712,7 +714,7 @@
 	.listContainer {
 		padding: 20px 0px 20px 10px;
 		.airContainer {
-			width: 510px;
+			width: 520px;
 			height: 305px;
 			border-radius: 10px;
 			border: 1px solid #d7d7d7;
@@ -862,7 +864,7 @@
 						// border: 1px solid #d7d7d7;
 						border-radius: 5px;
 						display: inline-block;
-						margin-left: 5px;
+						// margin-left: 5px;
 
 					}
 					.switch {

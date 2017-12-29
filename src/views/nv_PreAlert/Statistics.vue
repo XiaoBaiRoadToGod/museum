@@ -68,7 +68,7 @@ import { warningStatistical, warningBar, warningCurve } from '../../api/api'
 					value: 2,
 					label: '短信报警'
 				}],
-				startDate: new Date(today - oneday * 7),
+				startDate: new Date(today - oneday * 6),
 				endDate: new Date(),
 		        pickerOptions0: {
 		          disabledDate(time) {

@@ -74,44 +74,44 @@ import echarts from '../../../../static/js/echarts';
 		data(){
 			return {
 				snArr:'',
-				startDate: new Date(today - oneday * 7),  // 开始时间
+				startDate: new Date(today - oneday * 6),  // 开始时间
 				endDate: new Date(),          // 结束时间
 				pickerOptions0: {
-                  disabledDate(time) {
-                    return time.getTime() > Date.now();
-                  }
-                },
-                pickerOptions1: {
-                  disabledDate(time) {
-                    return time.getTime() > Date.now();
-                  }
-                },
-                tableData: [],
-                Anlyera_tab_had:[{
-		          "channelNum":'',
-		          "count": '',
-		          "beginTime": '',
-		          "endTime": ''
-		        }],
-		        DataAnalyzer:[],
-		        loading:false,
-		        galleryNum: null,    // 通道数量
-		        chartLine:null
-			}
+					disabledDate(time) {
+						return time.getTime() > Date.now();
+					}
+				},
+				pickerOptions1: {
+					disabledDate(time) {
+						return time.getTime() > Date.now();
+					}
+				},
+				tableData: [],
+				Anlyera_tab_had:[{
+					"channelNum":'',
+					"count": '',
+					"beginTime": '',
+					"endTime": ''
+				}],
+				DataAnalyzer:[],
+				loading:false,
+				galleryNum: null,    // 通道数量
+				chartLine:null
+				}
 		},
 		methods:{
 			queryWarningData(){
 				var params = {  //  传到后台的必须参数
-			            'beginTime': this.timeFormatter(this.startDate),
-			            'endTime': this.timeFormatter(this.endDate),
-			            'sn': this.snArr
-		          	};
-		          	// console.log(params);
-		          	TabMulti(params).then( data => { // 表格数据
-		          		// console.log(data);
-		          		this.addTab_data(data);
-		          	});
-		          	this.getMeanQuxian();
+					'beginTime': this.timeFormatter(this.startDate),
+					'endTime': this.timeFormatter(this.endDate),
+					'sn': this.snArr
+				};
+				// console.log(params);
+				TabMulti(params).then( data => { // 表格数据
+					// console.log(data);
+					this.addTab_data(data);
+				});
+				this.getMeanQuxian();
 			},
 			addTab_data(data){
 				 if( data != null && data != '' ){
@@ -310,37 +310,37 @@ import echarts from '../../../../static/js/echarts';
 			},
 			formatDate(date) {
                 // this.startDate = date;
-            },
-            formatDate1(val) {
-                var newDate = new Date();
-                var chooseDate = new Date(Date.parse(val.replace(/-/g, "/")));
-                var stopDateTime = new Date(Date.parse(val.replace(/-/g, '/')));
-                    stopDateTime.setHours(23);
-                    stopDateTime.setMinutes(59);
-                    stopDateTime.setSeconds(59);
-                if(chooseDate.getDate() == newDate.getDate()){
-                    this.endDate = this.formatDateTime(new Date());
-                }else{
-                    this.endDate = this.formatDateTime(stopDateTime);
-                }
-                // this.endDate = val;
-            },
-            formatDateTime(val){
-                var date = new Date(val);
-                var y = date.getFullYear();
-                var m = date.getMonth() + 1;
-                m = m < 10 ? '0'+m : m;
-                var d = date.getDate();
-                d = d < 10 ? ('0'+ d) : d;
-                var h = date.getHours();
-                var minute = date.getMinutes();
-                minute = minute < 10 ? ('0'+minute) : minute;
-                return y +  '/' + m + '/'+d+ ' '+ h + ":"+minute;
-            },
-            timeFormatter(value){
-                var date = new Date(value);
-                return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()+ ' '+ date.getHours()+':'+date.getMinutes();
-            }
+			},
+			formatDate1(val) {
+					var newDate = new Date();
+					var chooseDate = new Date(Date.parse(val.replace(/-/g, "/")));
+					var stopDateTime = new Date(Date.parse(val.replace(/-/g, '/')));
+							stopDateTime.setHours(23);
+							stopDateTime.setMinutes(59);
+							stopDateTime.setSeconds(59);
+					if(chooseDate.getDate() == newDate.getDate()){
+							this.endDate = this.formatDateTime(new Date());
+					}else{
+							this.endDate = this.formatDateTime(stopDateTime);
+					}
+					// this.endDate = val;
+			},
+			formatDateTime(val){
+					var date = new Date(val);
+					var y = date.getFullYear();
+					var m = date.getMonth() + 1;
+					m = m < 10 ? '0'+m : m;
+					var d = date.getDate();
+					d = d < 10 ? ('0'+ d) : d;
+					var h = date.getHours();
+					var minute = date.getMinutes();
+					minute = minute < 10 ? ('0'+minute) : minute;
+					return y +  '/' + m + '/'+d+ ' '+ h + ":"+minute;
+			},
+			timeFormatter(value){
+					var date = new Date(value);
+					return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()+ ' '+ date.getHours()+':'+date.getMinutes();
+			}
 		},
 		mounted(){
 			// this.queryWarningData();

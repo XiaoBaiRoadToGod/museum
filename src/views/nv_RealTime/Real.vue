@@ -281,16 +281,18 @@ export default {
           }
           var isHengwen = data[i][13].indexOf('恒温恒湿机') >= 0;
           // console.log(isHengwen);
-          let humi = '';
-          if(zhantingID == 104 || zhantingID == 105) {
-            if(data[i][2] >= 60) {
-              humi = this.MathRandom();
-            } else {
-              humi = data[i][2];
-            }
-          } else {
-            humi = data[i][2];
-          }
+
+          // 湿度超标 让他显示正常
+          // let humi = '';
+          // if(zhantingID == 104 || zhantingID == 105) {
+          //   if(data[i][2] >= 60) {
+          //     humi = this.MathRandom();
+          //   } else {
+          //     humi = data[i][2];
+          //   }
+          // } else {
+          //   humi = data[i][2];
+          // }
           this.items.push({
             "Name":data[i][0],
             "UulIng":data[i][13],
@@ -299,8 +301,8 @@ export default {
             "Left":(Number(data[i][9])+Number(data[i][10])) * 50,
             "inx": "popover" + (i+1),
             "Tmp":data[i][1],
-            // "Huid":data[i][2],
-            "Huid": humi,
+            "Huid":data[i][2],
+            // "Huid": humi,
             "Songd":data[i][3],
             "Uaug":data[i][4],
             "Tmp_Unit":data[i][5],
@@ -308,8 +310,8 @@ export default {
             "Songd_Unit":data[i][7],
             "Uaug_Unit":data[i][8],
             "color1":data[i][14],
-            // "color2":data[i][15],
-            "color2": '#666',
+            "color2":data[i][15],
+            // "color2": '#666',
             "color3":data[i][16],
             "color4":data[i][17],
             "yiId": data[i][20] + '/' + data[i][19],

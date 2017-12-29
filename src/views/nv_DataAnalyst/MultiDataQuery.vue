@@ -1,13 +1,13 @@
 <template>
 	<el-row v-loading="loading" element-loading-text="加载中" style='height:100%;'>
 		<el-col :span="24" class="btn_pad">
-			<el-button type="primary" class='btn_Search_all' @click='chooseReference'><i class='chooseConsult el-icon--left'></i>{{ chooseReferences }}</el-button>
+			<el-button v-if='!isHidden' type="primary" class='btn_Search_all' @click='chooseReference'><i class='chooseConsult el-icon--left'></i>{{ chooseReferences }}</el-button>
 			<el-button type="primary" icon="search" @click="AddDataQuery" class="btn_Search_all">查询多组数据</el-button>
 			<el-button @click="outDataMultiAll" class="btn_Search_all">导出数据</el-button>
 			<el-button @click="html2CanvasMultiAll" class="btn_Search_all">导出图片</el-button>
 			<div class='goBack' @click='$router.back(-1)'></div>
 			<!-- 备忘录 -->
-			<span class='memorandum' @click='openAddMemorandumDialog' ></span>
+			<!-- <span class='memorandum' @click='openAddMemorandumDialog' ></span> -->
 			
 		</el-col>
 		<el-dialog :visible.sync='memorandumDialog' title='添加备忘录' class='addMemorandum'>
@@ -189,7 +189,7 @@ var oneday = 1000 * 60 * 60 * 24;
 			return {
 				OFdataloading: false, // 定义默认加载事件
 				potDate: null,  // 传到后台的数据
-				S_value_data: new Date(today - oneday * 7),  // 开始时间
+				S_value_data: new Date(today - oneday * 6),  // 开始时间
 				loading: false,   // 定义预加载
 				S_data_Pic: {
 					disabledDate(time) {
@@ -237,7 +237,8 @@ var oneday = 1000 * 60 * 60 * 24;
 				chooseContShow: false,               // true为显示选择参考设备的容器
 				chooseReferenceData: [],             // 存放选择参考设备的数据
 				memorandumDialog: false,    // 添加备忘录弹窗
-        		memorandumContext: ''       // 备忘录内容
+				memorandumContext: '',       // 备忘录内容
+				isHidden: true              // 选择参考设备只针对国博false， 其他为true
 			}
 		},
 		props: ['dateType'],
@@ -1506,8 +1507,8 @@ var oneday = 1000 * 60 * 60 * 24;
 				console.log(this.$store.state.startDate);
 				// console.log(this.formatDateTime(this.S_value_data));
 				console.log(this.N_value_data);
-				this.S_value_data = this.$store.state.startDate == null ? this.S_value_data : this.$store.state.startDate;
-				this.N_value_data = this.$store.state.endDate == null ? this.N_value_data : this.$store.state.endDate;
+				this.S_value_data = this.$store.state.startDate == null ? new Date(today - oneday * 6) : this.$store.state.startDate;
+				this.N_value_data = this.$store.state.endDate == null ? new Date() : this.$store.state.endDate;
 				this.$store.state.NewID = '';
 				this.get_Data_Instrument();
 			} else if (this.$store.state.MultiDataSn !== null && this.$store.state.MultiDataSn !== '') {

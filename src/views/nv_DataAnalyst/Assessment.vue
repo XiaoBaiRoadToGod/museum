@@ -39,6 +39,7 @@
 	      	
 	      </el-col>
 	  </el-row>
+		<!-- 温湿度曲线和九宫格 -->
 	  <el-row :span="24" class="contt_tab" :gutter="20">
 	  	<el-col :span="16">
 	  		<el-col :span="24" class="bor_ddd">
@@ -84,11 +85,12 @@
 		  	</el-col>
 	  	</el-col>
 	  </el-row>
+		<!--  -->
 	  <el-row :span="24" class="magn_tp">
+			<!-- height='200' -->
 	  	<el-table
 		    :data="tab_buttom_data"
 		    border
-		    height="200"
 		    style="width: 100%">
 		    <el-table-column
 		      prop="name"
@@ -141,32 +143,32 @@ var oneday = 1000 * 60 * 60 * 24;
   import echarts from '../../../static/js/echarts.js'
   import qs from 'qs'
   import { BenchmarkStatistics,SudukuMean,YIELD,Wave } from '../../api/api'
-	export default{
-		data(){
-			return{
+	export default {
+		data () {
+			return {
 				loading: false,
 				TexNull: true,
-				S_value_data: new Date(today - oneday * 7),  //  开始查询的时间
+				S_value_data: new Date(today - oneday * 6),  //  开始查询的时间
 				N_value_data: new Date(),   //  结束查询的时间
 				S_data_Pic: {
-			        disabledDate(time) {
-			          return time.getTime() > Date.now();
-			        }
-		        },
-		        N_data_Pic: {
-		          disabledDate(time) {
-		            return time.getTime() > Date.now();
-		        	}
-        		},
-        		radio: '1', //选择温湿度
-        		Suduku: [], // 九宫格
-        		zhantingID : '', // 储存id值
-        		tab_buttom_data: [], //数据分析概览    name Tmp_data_Max  Tmp_data_Min Vaio_data_Tmp wave_data_Tmp Huid_data_Max Huid_data_Min Vod_data_Huid Wave_data_Huid
-        		YIELD_data: [{
-        			"value1": '',
-        			"value2": ''
-        		}], //合格率
-        		lineStyleWidth: '1.5'  //曲线图的线条宽度  可小数 
+					disabledDate(time) {
+						return time.getTime() > Date.now();
+					}
+		    },
+				N_data_Pic: {
+					disabledDate(time) {
+						return time.getTime() > Date.now();
+					}
+				},
+				radio: '1', //选择温湿度
+				Suduku: [], // 九宫格
+				zhantingID : '', // 储存id值
+				tab_buttom_data: [], //数据分析概览    name Tmp_data_Max  Tmp_data_Min Vaio_data_Tmp wave_data_Tmp Huid_data_Max Huid_data_Min Vod_data_Huid Wave_data_Huid
+				YIELD_data: [{
+					"value1": '',
+					"value2": ''
+				}], //合格率
+				lineStyleWidth: '1.5'  //曲线图的线条宽度  可小数 
 
 			}
 		},
@@ -180,31 +182,35 @@ var oneday = 1000 * 60 * 60 * 24;
 			                  type:'warning',
 			                  message:'请正确选择日期!!!'
 			              })
-			        }else{
+			    }else{
 						// 添加加载事件
 						this.loading = true;
 						if( this.S_value_data != '' && this.N_value_data != '' ){
 							this.potDate = {
 								'groupID': this.zhantingID,
-					            'beginTime': this.timeFormatter(this.S_value_data),
-					            'endTime': this.timeFormatter(this.N_value_data)
-					          };
-					        BenchmarkStatistics(this.potDate).then( data => {
-					        	console.log(data)
-					        	this.DataLoading(data);
-					        });
-					        SudukuMean(this.potDate).then( data => {
-					        	// console.log(data)
-					        	this.Suduku_UpData(data);
-					        });
-					        YIELD(this.potDate).then( data => { 
-					        	// console.log(data)
-					        	this.YiEld_UpData(data);
-					        });
-					        Wave(this.potDate).then( data => {
-					        	console.log(data)
-					        	this.Wear_UpData(data);
-					        });
+								'beginTime': this.timeFormatter(this.S_value_data),
+								'endTime': this.timeFormatter(this.N_value_data)
+							};
+							// 温湿度
+						BenchmarkStatistics(this.potDate).then( data => {
+							console.log(data)
+							this.DataLoading(data);
+						});
+						//  九宫格
+						SudukuMean(this.potDate).then( data => {
+							// console.log(data)
+							this.Suduku_UpData(data);
+						});
+						// 合格率
+						YIELD(this.potDate).then( data => { 
+							// console.log(data)
+							this.YiEld_UpData(data);
+						});
+						// 表格
+						Wave(this.potDate).then( data => {
+							console.log(data)
+							this.Wear_UpData(data);
+						});
 						}else{
 							// alert(1)  数据选择不完整 弹出实例窗口
 				          	this.open_Warning();
@@ -312,7 +318,7 @@ var oneday = 1000 * 60 * 60 * 24;
 		          type: type_msg
 		        });
 		      },
-			potDateID: (_this) => {// 可定义成全局函数
+				potDateID: (_this) => {// 可定义成全局函数
 		        // 获取展厅的id
 		        _this.zhantingID = _this.$store.state.zhantingID;
 		    },

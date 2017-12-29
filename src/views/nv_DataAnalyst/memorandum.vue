@@ -32,11 +32,14 @@
                     <el-col :span='3' class='logDate sameHeight'>
                         {{item.PreservationTime}}
                     </el-col>
-                    <el-col :span='18' class='logContext sameHeight'>
+                    <el-col :span='15' class='logContext sameHeight'>
                         {{item.Describe}}
                     </el-col>
                     <el-col :span='3' class='logOperation sameHeight'>
                         <span @click='jumpDataChart(item)' >查看</span>
+                    </el-col>
+                    <el-col :span='3' class='logOperation sameHeight deleteRmark'>
+                        <span @click='Delete(item)' >删除</span>
                     </el-col>
                 </el-col>
                 <el-col :span='24'>
@@ -64,11 +67,11 @@ var definedStopDateTime = new Date();
     definedStopDateTime.setHours(23);
     definedStopDateTime.setMinutes(59);
     definedStopDateTime.setSeconds(59);
-import { GetMemorandumAll } from '../../api/api'
+import { GetMemorandumAll, MemorandumDelect } from '../../api/api'
 export default {
     data() {
         return {
-            startTime: new Date(today - oneday * 7),
+            startTime: new Date(today - oneday * 6),
             pickerOptions0: {
                 disabledDate(time) {
                     return time.getTime() > Date.now();
@@ -93,8 +96,8 @@ export default {
                 endTime: this.timeFormatter(this.endTime),
                 pageIndex: this.pageIndex - 1
             };
-            console.log(this.timeFormatter(this.startTime));
-            console.log(this.timeFormatter(this.endTime))
+            // console.log(this.timeFormatter(this.startTime));
+            // console.log(this.timeFormatter(this.endTime))
             GetMemorandumAll(params).then(res => {
                 console.log(res);
                 this.logData = [];
@@ -104,6 +107,23 @@ export default {
                     this.logData = res;
                 }
                 
+            })
+        },
+        Delete (item) {
+            let params = {id: item.Id}
+            MemorandumDelect(params).then(res => {
+                if(res == 200) {
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功！！！'
+                    });
+                    this.getData()
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '删除失败！！！'
+                    })
+                }
             })
         },
         queryData() {
@@ -197,6 +217,9 @@ export default {
                 word-break: break-all;
                 padding: 15px 0;
             }
+            .deleteRmark {
+                border-left: 1px solid #ccc;
+            }
             .logDate {
 
                 background: #ebf8ff;
@@ -223,7 +246,7 @@ export default {
 
                 }
             }
-            .el-col-3, .el-col-18 {
+            .el-col-3, .el-col-18, .el-col {
                 float: none;
             }
         }

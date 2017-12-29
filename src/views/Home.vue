@@ -219,10 +219,10 @@ export default {
                 containerWidth: null,
                 menuWidth: '200px',
                 guoboChooseZhanting: true,  // 国博设置为true，其他为false
-                scanCode:false,
-                qrcode:true,   // 二维码开关, true为显示
-                // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
-                codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
+                scanCode: false,
+                qrcode: true,   // 二维码开关, true为显示
+                codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
+                // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
                 // codeVal: 'http://huato.net:8022',                     // 国博
                 // codeVal: 'http://huato.net:8013',                 // 展会
                 QrLogoSrc: '../../static/img/LOGO182.png',    //  logo 
@@ -464,8 +464,8 @@ export default {
 
 <style scoped lang="scss">
 @import '~scss_vars';
-$LOGO:'../assets/img/NanBoLogo.png';         // 南博LOGO
-// $LOGO:'../../static/img/ShenBoLogo.png';        // 深博LOGO
+// $LOGO:'../assets/img/NanBoLogo.png';         // 南博LOGO
+$LOGO:'../../static/img/ShenBoLogo.png';        // 深博LOGO
 // $LOGO:'../../static/img/guoboLogo.png';      // 国博LOGO
 // $LOGO:'../../static/img/zhenYuanLogo.png';   // 镇原Logo
 // $LOGO:'../../static/img/tianshuiLogo.png';   // 天水Logo

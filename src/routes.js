@@ -82,30 +82,30 @@ let routes = [
         }
       ]
     },
-    // {
-    //   path: '/',
-    //   component: Home,
-    //   name: '空调调控',
-    //   iconCls: 'fa icon_img_lt_air',
-    //   leaf: true,
-    //   children: [
-    //     {
-    //       path: '/AirControl',
-    //       component:AirControl,
-    //       name: '空调调控'
-    //     }
-    //   ]
-    // },
-    // {
-    //   path: '/',
-    //   component: Home,
-    //   name: '预警平台',
-    //   iconCls: 'fa icon_img_lt_03',
-    //   children: [
-    //     { path: '/Statistics', component: Statistics, name: '预警统计' },
-    //     { path: '/Inquire', component: Inquire, name: '预警查询' }
-    //   ]
-    // },
+    {
+      path: '/',
+      component: Home,
+      name: '空调调控',
+      iconCls: 'fa icon_img_lt_air',
+      leaf: true,
+      children: [
+        {
+          path: '/AirControl',
+          component:AirControl,
+          name: '空调调控'
+        }
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '预警平台',
+      iconCls: 'fa icon_img_lt_03',
+      children: [
+        { path: '/Statistics', component: Statistics, name: '预警统计' },
+        { path: '/Inquire', component: Inquire, name: '预警查询' }
+      ]
+    },
     {
       path: '/',
       component: Home,
@@ -117,32 +117,32 @@ let routes = [
         { path: '/CustomGroup', component: CustomGroup, name: '分组统计' },
         { path: '/MeanValue', component: MeanValue, name: '平均值', hidden: true },
         { path: '/assessment', component: Assessment, name: '综合评估' },
-        { path: '/Memorandum', component: Memorandum, name: '备忘录' },
+        // { path: '/Memorandum', component: Memorandum, name: '备忘录' },
         { path: '/childen_Chart', component: Childen_Chart, name: '', hidden: true },
         // { path: '/heatField', component: HeatField, name: '热量场' }
         
       ]
     },
-    // {
-    //   path: '/',
-    //   component: Home,
-    //   name: '陈列文物',
-    //   leaf: true,
-    //   iconCls: 'fa icon_img_lt_05',
-    //   children: [
-    //     {
-    //       path: '/tableOf_CR',
-    //       component: TableOf_CR,
-    //       name: '展陈文物'
-    //     },
-    //     {
-    //       path: '/particulars/:id',
-    //       component: Particulars,
-    //       name: '文物详情',
-    //       hidden: true
-    //     }
-    //   ]
-    // },
+    {
+      path: '/',
+      component: Home,
+      name: '陈列文物',
+      leaf: true,
+      iconCls: 'fa icon_img_lt_05',
+      children: [
+        {
+          path: '/tableOf_CR',
+          component: TableOf_CR,
+          name: '展陈文物'
+        },
+        {
+          path: '/particulars/:id',
+          component: Particulars,
+          name: '文物详情',
+          hidden: true
+        }
+      ]
+    },
     {
       path:'/',
       component: Home,
