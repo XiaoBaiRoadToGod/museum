@@ -180,6 +180,7 @@ var oneday = 1000 * 60 * 60 * 24;
   import shine from '../../../static/js/shine.js'
   import html2canvas from 'html2canvas'
   import qs from 'qs'
+  import { saveImg } from '../../common/js/saveImg'
   import { Data_Instrument,MultiData,TabMulti,multiDataOutExl, GetMemorandumAdd } from '../../api/api'
   
   // Vue.prototype.$echarts = echarts 
@@ -956,68 +957,73 @@ var oneday = 1000 * 60 * 60 * 24;
 		    		}
 	    		};
 	    		// console.log(hh);
-		        html2canvas(document.getElementById('canvas_html_img'), {
-		          height: hh+400,
-		          onrendered: function(canvas) {
-		            // let CanvasUrl = canvas.toDataURL();
-		            // console.log(CanvasUrl)
-		            // document.body.appendChild(canvas);
-		            // console.log(_this)
-		            // _this.downloadFile('ship.png', canvas.toDataURL("image/png"));
-		            // 方法一: 兼容IE9+
-		            var type = 'png'
+				html2canvas(document.querySelector('#canvas_html_img')).then((canvas) =>{
+					var type = 'png'
 		            var filename = zhantingName+'-数据分析' + (new Date()).getTime() + '.' + type;
-		            var saveImg = function (canvas, filename) {//canvas保存为图片
-				        if (canvas.msToBlob) {//IE9+浏览器
-				            var blob = canvas.msToBlob();
-				            window.navigator.msSaveBlob(blob, filename);
-				        } else {//firefox,chrome
-				            var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-				            save_link.href = canvas.toDataURL('image/png');
-				            save_link.download = filename;
-				            var event = document.createEvent('MouseEvents');
-				            event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-				            save_link.dispatchEvent(event);
-				        }
-				    };
-				    saveImg(canvas,filename)
-				    // 方法二:
-		            // 图片导出为 png 格式
-		            // var type = 'png';
-		            // var imgData = canvas.toDataURL(type); 
-		            /**
-		             * 获取mimeType
-		             * @param  {String} type the old mime-type
-		             * @return the new mime-type
-		             */
-		            // var _fixType = function(type) {
-		            //     type = type.toLowerCase().replace(/jpg/i, 'jpeg');
-		            //     var r = type.match(/png|jpeg|bmp|gif/)[0];
-		            //     return 'image/' + r;
-		            // };
+					saveImg(canvas, filename);
+				})
+		        // html2canvas(document.getElementById('canvas_html_img'), {
+		        //   height: hh+400,
+		        //   onrendered: function(canvas) {
+		        //     // let CanvasUrl = canvas.toDataURL();
+		        //     // console.log(CanvasUrl)
+		        //     // document.body.appendChild(canvas);
+		        //     // console.log(_this)
+		        //     // _this.downloadFile('ship.png', canvas.toDataURL("image/png"));
+		        //     // 方法一: 兼容IE9+
+		        //     var type = 'png'
+		        //     var filename = zhantingName+'-数据分析' + (new Date()).getTime() + '.' + type;
+		        //     var saveImg = function (canvas, filename) {//canvas保存为图片
+				//         if (canvas.msToBlob) {//IE9+浏览器
+				//             var blob = canvas.msToBlob();
+				//             window.navigator.msSaveBlob(blob, filename);
+				//         } else {//firefox,chrome
+				//             var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+				//             save_link.href = canvas.toDataURL('image/png');
+				//             save_link.download = filename;
+				//             var event = document.createEvent('MouseEvents');
+				//             event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+				//             save_link.dispatchEvent(event);
+				//         }
+				//     };
+				//     saveImg(canvas,filename)
+				//     // 方法二:
+		        //     // 图片导出为 png 格式
+		        //     // var type = 'png';
+		        //     // var imgData = canvas.toDataURL(type); 
+		        //     /**
+		        //      * 获取mimeType
+		        //      * @param  {String} type the old mime-type
+		        //      * @return the new mime-type
+		        //      */
+		        //     // var _fixType = function(type) {
+		        //     //     type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+		        //     //     var r = type.match(/png|jpeg|bmp|gif/)[0];
+		        //     //     return 'image/' + r;
+		        //     // };
 		               
-		            // // 加工image data，替换mime type
-		            // imgData = imgData.replace(_fixType(type),'image/octet-stream');
-		            // /**
-		            //  * 在本地进行文件保存
-		            //  * @param  {String} data     要保存到本地的图片数据
-		            //  * @param  {String} filename 文件名
-		            //  */
-		            // var saveFile = function(data, filename){
-		            //     var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-		            //     save_link.href = data;
-		            //     save_link.download = filename;
+		        //     // // 加工image data，替换mime type
+		        //     // imgData = imgData.replace(_fixType(type),'image/octet-stream');
+		        //     // /**
+		        //     //  * 在本地进行文件保存
+		        //     //  * @param  {String} data     要保存到本地的图片数据
+		        //     //  * @param  {String} filename 文件名
+		        //     //  */
+		        //     // var saveFile = function(data, filename){
+		        //     //     var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+		        //     //     save_link.href = data;
+		        //     //     save_link.download = filename;
 		               
-		            //     var event = document.createEvent('MouseEvents');
-		            //     event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-		            //     save_link.dispatchEvent(event);
-		            // };
-		            // // 下载后的问题名
-		            // var filename = 'baidufe_' + (new Date()).getTime() + '.' + type;
-		            // // download
-		            // saveFile(imgData,filename);
-		          },
-		        });
+		        //     //     var event = document.createEvent('MouseEvents');
+		        //     //     event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+		        //     //     save_link.dispatchEvent(event);
+		        //     // };
+		        //     // // 下载后的问题名
+		        //     // var filename = 'baidufe_' + (new Date()).getTime() + '.' + type;
+		        //     // // download
+		        //     // saveFile(imgData,filename);
+		        //   },
+		        // });
 			},
 			addTab_data: function(data){ // 通道数据处理
 		        // console.log(data)
@@ -1413,7 +1419,7 @@ var oneday = 1000 * 60 * 60 * 24;
                 // console.log(hh);
                 $('.content-container').width(ww - 201 );
                 $('.content-wrapper').css({'height': hh-90-32, 'overflow-y':'auto'});
-                $('#canvas_html_img').height(hh-90-32-42-12);
+                // $('#canvas_html_img').height(hh-90-32-42-12);
                 this.twoChannelWidth = (ww-201-20)*0.875 + 'px';
                 this.threeChannelWidth = (ww-201-20-20)*0.875/2 + 'px';
                 this.humitureWidth = (ww-201-20) + 'px';

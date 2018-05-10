@@ -1,5 +1,5 @@
 <template>
-	<el-row type="flex" justify="space-around" class='my_padding' v-loading="loading" element-loading-text="加载中" >
+	<el-row type="flex" justify="space-around" style='height: 100%' class='my_padding' v-loading="loading" element-loading-text="加载中" >
 		<el-col :span='24'  >
 			<el-table :data='controlData' border stripe  class='myTable' style='width:100%'>
 				<el-table-column prop='name' label='名称' ></el-table-column>
@@ -173,7 +173,9 @@
 		    					<el-button type="primary" @click="btnConfirm4">确 定</el-button>
 		    				</span>
 						</el-dialog>
-						<el-switch @change='setSwitch($event, scope.$index, controlData)' v-model='controlData[scope.$index].value2' on-color='#8ab2c9' on-off='#f5f5f5' v-bind:disabled='controlData[scope.$index].isTrue'></el-switch>
+						<el-switch @change='setSwitch($event, scope.$index, controlData)' v-model='controlData[scope.$index].value2' on-color='#8ab2c9' on-off='#f5f5f5' v-bind:disabled='controlData[scope.$index].isTrue'>
+							<i class='el-icon-loading' ></i>
+						</el-switch>
 					</template>
 				</el-table-column>
 
@@ -246,8 +248,11 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 		},
 		methods: {
 			resetWarning(){
+				this.loading = true;
+				this.dialogAIO = false;
 				var params = {type:'Reset', sn: this.sn, strVal1:'',strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''};
 				ControlsSet(params).then(res => {
+					this.loading = false;
 					if(res == '200'){
 						this.$message({
 							type:'success',
@@ -304,23 +309,44 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 							message:'请输入正确的数值!!!'
 						})
 					}else{
+						
+						this.loading = true;
 						this.dialogSmallVisible = false;
 						this.controlData[this.dataIndex].setHumi = Number(this.setHumi);
 						var params = { type: 'One', sn: this.sn, strVal1: eval(Number(this.setHumi)), strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:'' };
 						ControlsSet(params).then(res => {
 							// console.log(res);
-							if(res == '200'){
-								this.getDataNum();
-								this.getData();
+							this.loading = false;
+							this.getDataNum();
+							this.getData();
+							res = Number(res);
+							if(res == 200){
+								
 								this.$message({
 									type:'success',
 									message:'设置成功！'
 								});
 								this.setHumi = null;
-							}else{
+							} else if(res == 201){
 								this.$message({
 									type:'error',
 									message:'设置失败！'
+								})
+							}  else if (res === 202 ) {
+								this.$message({
+									message: '设备未配置'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '连接不正常'
+								})
+							} else if (res === 206 ) {
+								this.$message({
+									message: '操作超时'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '系统异常'
 								})
 							}
 						})
@@ -341,23 +367,44 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 							message:'请输入正确的数值!!!'
 						})
 					}else{
+						
+						this.loading = true;
 						this.dialogLargeVisible = false;
 						this.controlData[this.dataIndex].setHumi = Number(this.setHumi);
 						var params = { type: 'One', sn: this.sn, strVal1: eval(Number(this.setHumi)),strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:'' };
 						ControlsSet(params).then(res => {
-							if(res == '200'){
-								this.getDataNum();
-								this.getData();
+							this.getDataNum();
+							this.getData();
+							this.loading = false;
+							res = Number(res);
+							if(res == 200){
+								
 								this.$message({
 									type:'success',
 									message:'设置成功！'
 								});
 								
 								this.setHumi = null;
-							}else{
+							} else if(res == 201){
 								this.$message({
 									type:'error',
 									message:'设置失败！'
+								})
+							}  else if (res === 202 ) {
+								this.$message({
+									message: '设备未配置'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '连接不正常'
+								})
+							} else if (res === 206 ) {
+								this.$message({
+									message: '操作超时'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '系统异常'
 								})
 							}
 						})
@@ -365,8 +412,11 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 				}
 			},
 			btnConfirm3(){
+				console.log('-----------------------------')
+				console.log(this.addHumiCeling)
 				if((this.addHumiCeling != null && this.addHumiCeling != '') || (this.addHumiFloor != null && this.addHumiFloor != '') || (this.dehumiCeling != null && this.dehumiCeling != '') || (this.dehumiFloor != null && this.dehumiFloor != '') ){
 						if(this.myReg(this.addHumiCeling)==true||this.myReg(this.addHumiFloor)==true||this.myReg(this.dehumiCeling)==true||this.myReg(this.dehumiFloor)==true){
+							console.log('------------1111-----------------')
 							this.$message({
 								type:'warning',
 								message:'请输入正确的数值!!!',
@@ -374,6 +424,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 							})
 						}else{
 							if((this.dehumiCeling != null && this.dehumiCeling != '') || (this.dehumiFloor != null && this.dehumiFloor != '') || (this.addHumiFloor != null && this.addHumiFloor != '')|| (this.addHumiCeling != null && this.addHumiCeling != '')){
+								console.log('--1--')
 								if(this.dehumiCeling == null || this.dehumiCeling == '' || this.dehumiFloor == null || this.dehumiFloor == '' || this.addHumiCeling == null || this.addHumiCeling == '' || this.addHumiFloor == null || this.addHumiFloor == ''){
 									this.$message({
 										type:'warning',
@@ -381,6 +432,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 										customClass: 'myMarginTop20'
 									})
 								}else{
+									console.log('--2--')
 									if(this.myReg(this.dehumiCeling) == true || this.myReg(this.dehumiFloor) == true || this.myReg(this.addHumiFloor) == true || this.myReg(this.addHumiCeling) == true){
 										this.$message({
 											type:'warning',
@@ -388,6 +440,7 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 											customClass: 'myMarginTop20'
 										})
 									}else{
+										console.log('----')
 										if(this.dehumiCeling < 0 || this.dehumiCeling > 100 || this.dehumiFloor < 0 || this.dehumiFloor > 100 || this.addHumiCeling < 0 || this.addHumiCeling > 100 || this.addHumiCeling < 0 || this.addHumiCeling > 100){
 											this.$message({
 												type:'warning',
@@ -403,14 +456,19 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 												})
 											}else{
 												// console.log(this.dehumiCeling <= this.dehumiFloor);
+												console.log('点击')
+												this.loading = true;
 												this.dialogAIO = false;
 												var params = { sn: this.sn, strVal1: eval(Number(this.dehumiCeling)), strVal2: eval(Number(this.dehumiFloor)), strVal3: eval(Number(this.addHumiCeling)), strVal4: eval(Number(this.addHumiFloor)),strVal5:'',strVal6:'', type:'Three'};
 												// console.log(params);
 												ControlsSet(params).then(res => {
 													// console.log(res);
-													if(res == '200'){
-														this.getDataNum();
-														this.getData();
+													this.getDataNum();
+													this.getData();
+													this.loading = false;
+													res = Number(res);
+													if(res == 200){
+														
 														this.dehumiCeling = null;
 														this.dehumiFloor = null;
 														this.$message({
@@ -418,11 +476,27 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 															message:'设置成功！',
 															customClass: 'myMarginTop20'
 														})
-													}else{
+													}else if(res == 201){
 														this.$message({
 															type:'error',
 															message:'设置失败！',
 															customClass: 'myMarginTop20'
+														})
+													} else if (res === 202 ) {
+														this.$message({
+															message: '设备未配置'
+														})
+													} else if (res === 203 ) {
+														this.$message({
+															message: '连接不正常'
+														})
+													} else if (res === 206 ) {
+														this.$message({
+															message: '操作超时'
+														})
+													} else if (res === 203 ) {
+														this.$message({
+															message: '系统异常'
 														})
 													}
 												})
@@ -434,13 +508,11 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 							};
 
 						}
-				};
-				
-				if(this.addHumiCeling == null && this.addHumiCeling == '' && this.addHumiFloor == null && this.addHumiFloor == '' && this.dehumiCeling == null && this.dehumiCeling == '' && this.dehumiFloor == null && this.dehumiFloor == '' && this.setHumiOffset == null && this.setHumiOffset == '' && this.setHumi == null && this.setHumi == ''){
-								this.$message({
-									type:'warning',
-									message:'请输入需要设置的数值！'
-								});
+				} else {
+					this.$message({
+						type:'warning',
+						message:'请输入需要设置的数值！'
+					});
 				}
 
 			},
@@ -466,6 +538,8 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 										message:'请输入0~100之间的数值!!!'
 									})
 								}else{
+									
+									this.loading = true;
 									this.dialogConstantSet = false;
 									// console.log(this.myReg(this.setTemp)[0]);
 									this.controlData[this.dataIndex].setTemp = Number(this.setTemp);
@@ -473,18 +547,37 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 									var params = { type: 'Five', sn: this.sn, strVal1: eval(Number(this.setTemp)),strVal2:eval(Number(this.setHumi)),strVal3:'',strVal4:'',strVal5:'',strVal6:'' };
 									ControlsSet(params).then(res => {
 										// console.log(res);
-										if(res == '200'){
-											this.getDataNum();
-											this.getData();
+										this.getDataNum();
+										this.getData();
+										this.loading = false;
+										res = Number(res)
+										if(res == 200){
+											
 											this.setTemp = null;
 											this.$message({
 												type:'success',
 												message:'设置成功！'
 											})
-										}else{
+										}else if (res == 201){
 											this.$message({
 												type:'error',
 												message:'设置失败！'
+											})
+										}  else if (res === 202 ) {
+											this.$message({
+												message: '设备未配置'
+											})
+										} else if (res === 203 ) {
+											this.$message({
+												message: '连接不正常'
+											})
+										} else if (res === 206 ) {
+											this.$message({
+												message: '操作超时'
+											})
+										} else if (res === 203 ) {
+											this.$message({
+												message: '系统异常'
 											})
 										}
 									})
@@ -587,17 +680,42 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 					this.$confirm('是否开机', {
 						type: 'warning'
 					}).then(() => {
+						
+						this.loading = true;
 						var params = {type: 'KJ', sn: sn, strVal1: 1,strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''};
 						ControlsSet(params).then(res => {
+							this.loading = false;
+							res = Number(res)
+							setTimeout(function(){
+
+								_this.getDataNum();
+								_this.getData();
+							},0)
 							if(res == 200){
 								this.$message({
-									message:'已开机'
+									message:'操作成功'
 								});
-								setTimeout(function(){
-
-									_this.getDataNum();
-									_this.getData();
-								},0)
+								
+							} else if (res === 201) {
+								this.$message({
+									message: '操作失败'
+								})
+							} else if (res === 202 ) {
+								this.$message({
+									message: '设备未配置'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '连接不正常'
+								})
+							} else if (res === 206 ) {
+								this.$message({
+									message: '操作超时'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '系统异常'
+								})
 							}
 						})
 						
@@ -610,19 +728,45 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 					this.$confirm('是否关机', {
 						type: 'warning'
 					}).then(() => {
+						// for(let item of this.controlData) {
+						// 	item.isTrue = true
+						// }
+						this.loading = true;
 						var params = {type: 'GJ', sn: sn, strVal1: 0,strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''};
 						ControlsSet(params).then(res => {
-							// console.log(res)
+							console.log(res);
+							this.loading = false;
+							res = Number(res);
+							setTimeout(function(){
+								// console.log('-------');
+								_this.getDataNum();
+								_this.getData();
+							},0)
 							if(res == 200){
 								this.$message({
-									message:'已关机'
+									message:'操作成功'
 								});
-								setTimeout(function(){
-									// console.log('-------');
-									_this.getDataNum();
-									_this.getData();
-								},0)
 								
+							} else if (res === 201) {
+								this.$message({
+									message: '操作失败'
+								})
+							} else if (res === 202 ) {
+								this.$message({
+									message: '设备未配置'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '连接不正常'
+								})
+							} else if (res === 206 ) {
+								this.$message({
+									message: '操作超时'
+								})
+							} else if (res === 203 ) {
+								this.$message({
+									message: '系统异常'
+								})
 							}
 						})
 						
@@ -877,6 +1021,10 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
  </script>
 
 <style>
+.content-wrapper .el-loading-mask {
+	top: 0;
+	background-color: rgba(255,255,255,.4)
+}
 .deviceStateCont span{
 	display: inline-block;
 	height:40px;
