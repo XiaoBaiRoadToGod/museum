@@ -29,4 +29,4 @@ zengjin && houli
 
 ## 部分页面
 ----------------
-  ![](./views/hone.png)
+  ![](./views/home.png)
