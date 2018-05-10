@@ -24,3 +24,7 @@ Modern browsers and IE 10+.
 
 # License
 zengjin && houli
+
+## 部分页面
+----------------
+![](./views/hone.png)
