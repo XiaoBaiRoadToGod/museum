@@ -22,7 +22,7 @@ npm run build
 
 # Browser support
 
-Modern browsers and IE 10+.
+Modern browsers and IE9+.
 
 # License
 zengjin && houli
@@ -30,3 +30,4 @@ zengjin && houli
 ## 部分页面
 ----------------
   ![](./views/home.png)
+  ![](./views/control.png)
