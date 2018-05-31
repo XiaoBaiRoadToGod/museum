@@ -55,13 +55,13 @@
             </aside>
             <aside class="home_nav_pag_b menu-expanded" :class="{ active: !isActive }">
                 <!--导航菜单-->
-                <el-menu :default-active="$route.path" class="el-menu-vertical-demo iscollapsed" @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router  >
+                <el-menu :default-active="$route.path" class="el-menu-vertical-demo iscollapsed" @open="handleopen" @close="handleclose" unique-opened router  >
                     <template v-for="(item,index) in $router.options.routes" v-if="item.hidden&&item.rel_set">
-                        <el-submenu :index="index+''" v-if="!item.leaf">
+                        <el-submenu :index="index+''" v-if="!item.leaf" :key='index'>
                             <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
                             <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden"><i class="icon_img_lt_10"></i>{{child.name}}<i class="sanjiao_zt_min"></i></el-menu-item>
                         </el-submenu>
-                        <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
+                        <el-menu-item v-if="item.leaf&&item.children.length>0" :key='index' :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
                     </template>
                    
                 </el-menu>
@@ -78,12 +78,12 @@
                         </el-breadcrumb> -->
                         <el-menu :default-active="$route.path" class="el-menu-demo " @open="handleopen" @close="handleclose" @select="handleselect" unique-opened router v-show="!collapsed" mode="horizontal">
                             <template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
-                                <el-submenu :index="index+''" v-if="!item.leaf" >
+                                <el-submenu :index="index+''" v-if="!item.leaf" :key='index' >
                                     <template slot="title"><i :class="item.iconCls"></i>{{item.name}}</i>
                                     </template>
                                     <el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden" ><!-- <i class="icon_img_lt_10"></i> -->{{child.name}}<!-- <i class="sanjiao_zt_min"></i> --></el-menu-item>
                                 </el-submenu>
-                                <el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}<!-- <i class="sanjiao_zt"></i> --></el-menu-item>
+                                <el-menu-item v-if="item.leaf&&item.children.length>0" :key='index' :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}<!-- <i class="sanjiao_zt"></i> --></el-menu-item>
                             </template>
 
                         </el-menu>
@@ -111,7 +111,7 @@
                 </section>
                 <section class="cont_tlp">
                     <a href="http://www.huato.com" target="view_window"><img class='HuatoLogoImg' src="../assets/img/LOGO1.png" alt="HUATO"></a>
-                    <p>WWWRC V3.5.2.1 B001</p>
+                    <p>WWWRC V3.5.2.1 MQB1</p>
                     <p>Copyright 2016 版权所有</p>
                     <p>深圳华图测控系统有限公司</p>
                     <p>电话：+86-755-23012549</p>
@@ -129,7 +129,7 @@
                    <h3 class='chooseTit'>请选择展厅：</h3> 
                    <span class='ChooseClose' @click='closeChooseZhan'></span>
                 </div>
-                <span class='Gallery' v-for='item in options' :data='item.value' @click='guoChooseZhan($event.currentTarget)'>{{ item.label }}</span>
+                <span class='Gallery' v-for='(item, idx) in options' :key='idx' :data='item.value' @click='guoChooseZhan($event.currentTarget)'>{{ item.label }}</span>
             </div>
         </section>
         <el-col :span='24' class='scanCode' v-if='scanCode'>
@@ -221,9 +221,9 @@ export default {
                 guoboChooseZhanting: true,  // 国博设置为true，其他为false
                 scanCode: false,
                 qrcode: true,   // 二维码开关, true为显示
-                codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
+                // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
                 // codeVal: 'http://192.168.90.156:8082',              // 二维码文字  南博
-                // codeVal: 'http://huato.net:8022',                     // 国博
+                codeVal: 'http://huato.net:8022',                     // 国博
                 // codeVal: 'http://huato.net:8013',                 // 展会
                 QrLogoSrc: '../../static/img/LOGO182.png',    //  logo 
                 dateType: 'date'           // 日期控件 的显示格式 国博 date   、其他 datetime
@@ -259,8 +259,9 @@ export default {
             onSubmit() {
                 //console.log('submit!');
             },
-            handleopen() {
-                //console.log('handleopen');
+            handleopen(value) {
+                console.log('handleopen');
+                console.log(value)
             },
             handleclose() {
                 //console.log('handleclose');
@@ -273,7 +274,7 @@ export default {
                 $('.HelpC').addClass('active')
             },
             handleselect: function(a, b) {
-                // console.log(a ,b)
+                console.log(a)
             },
             //退出登录
             logout: function() {
@@ -320,9 +321,10 @@ export default {
                     set = URL.includes('changePassWord'),
                     relic_info = URL.includes('dR_Relic'),
                     setHide = URL.includes('setLoggerHide'),
-                    relic_img = URL.includes('pto_Relic');
+                    relic_img = URL.includes('pto_Relic'),
+                    operationInfo = URL.includes('loginInfo');
                 // console.log('当前：' + URL);
-                if (set || relic_info || relic_img || setHide) {
+                if (set || relic_info || relic_img || setHide || operationInfo) {
                     console.log('---set');
                     this.isActive = false;
                 } else {
@@ -494,7 +496,7 @@ ul.el-menu--horizontal li {
     padding-top: 10px;
 }
 .bar--wrapper > * {
-    padding-right: 7px !important; 
+    padding-right: 24px !important; 
 }
 @keyframes Mis{
     0%{

@@ -4,25 +4,30 @@ import qs from 'qs'
 
 // axios.defaults.baseURL = 'http://172.16.50.245:8080/api';    //深博
 // shenzhen 8080
-//    axios.defaults.baseURL = 'http://192.168.10.68:8080/api'; 
+   axios.defaults.baseURL = 'http://192.168.0.27:8019/api'; 
+  //  axios.defaults.baseURL = "http://192.168.0.20:8018/api"; 
+  //  axios.defaults.baseURL = "http://127.0.0.1:8011/api"; 
    // axios.defaults.baseURL = 'http://192.168.1.67:8080/api';   //展会
    // axios.defaults.baseURL = 'http://192.168.0.106:8080/api';   //展会
    // axios.defaults.baseURL = 'http://huato.net:8080/api'; 
-   axios.defaults.baseURL = 'http://huato.net:8025/api'; 
+//    axios.defaults.baseURL = 'http://huato.net:8025/api'; 
 //    axios.defaults.baseURL = 'http://192.168.90.156:8080/api';   // 南博
 // axios.defaults.baseURL = 'http://10.10.120.65:8080/api';       // 国博
 // axios.defaults.baseURL = 'http://10.10.120.65:8015/api';       // 国博   历史数据
 // axios.defaults.baseURL = 'http://10.185.58.16:8080/api';      // 崇信
-// axios.defaults.baseURL = 'http://192.168.100.200:8080/api';     // 庄浪
+// axios.defaults.baseURL = 'http://10.0.0.78:8080/api';     // 庄浪
 // axios.defaults.baseURL = 'http://192.168.20.147:8080/api';     // 陇西
 // axios.defaults.baseURL = 'http://10.1.1.209:8080/api';         // 鄂尔多斯
 // axios.defaults.baseURL = 'http://192.168.1.100:8080/api';     // 镇原
-// axios.defaults.baseURL = 'http://192.168.0.117:8080/api';     // 金昌
+// axios.defaults.baseURL = 'http://192.168.10.45:8080/api';     // 金昌
 // axios.defaults.baseURL = 'http://192.168.1.234:8080/api';     // 天水
 // axios.defaults.baseURL = 'http://192.168.0.254:8080/api';     // 庆城
+// axios.defaults.baseURL = 'http://huato.net:8017/api';     // 庆城
 // axios.defaults.baseURL = 'http://192.168.1.110:8080/api';     // 绵阳
 // axios.defaults.baseURL = 'http://192.168.5.101:8080/api';     // 广东海上丝绸之路
 // axios.defaults.baseURL = 'http://192.168.6.10:8080/api';     // 安徽博物院
+// axios.defaults.baseURL = 'http://192.168.4.246:8080/api';     // 华亭县博物院
+// axios.defaults.baseURL = 'http://192.168.10.102:8080/api';     // 睢宁博物馆
 // axios.defaults.baseURL = '/api';
 
 // let base = 'http://192.168.10.42:8080/api';
@@ -179,6 +184,12 @@ export const setLoggerHide = (params) => { return axios.get(`/Login/GetDisplayAl
 //提交隐藏仪器
 export const AddsetLoggerHide = (params) => { return axios.get(`/Login/GetupdateDisplay`, {params: params}).then( res => res.data ); };
 
+
+// ip地址
+
+export const getUserIp = () => {
+  return axios.get("//freegeoip.net/json/?callback=?").then(res => res.data);
+};
 
 
 

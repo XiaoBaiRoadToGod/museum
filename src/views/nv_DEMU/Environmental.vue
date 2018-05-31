@@ -448,7 +448,9 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 												customClass: 'myMarginTop20'
 											})
 										}else{
-											if(Number(this.dehumiCeling) <= Number(this.dehumiFloor || Number(this.addHumiCeling) <= Number(this.addHumiFloor)) ){
+											console.log(this.addHumiCeling)
+											console.log(this.addHumiFloor)
+											if(Number(this.dehumiCeling) <= Number(this.dehumiFloor ) ){
 												this.$message({
 													type:'warning',
 													message:'上限不能低于或等于下限!!!',
@@ -456,50 +458,59 @@ import { Controls, ControlsSet, ControlNum , ControlsDevicecopy, ControlsDeviceB
 												})
 											}else{
 												// console.log(this.dehumiCeling <= this.dehumiFloor);
-												console.log('点击')
-												this.loading = true;
-												this.dialogAIO = false;
-												var params = { sn: this.sn, strVal1: eval(Number(this.dehumiCeling)), strVal2: eval(Number(this.dehumiFloor)), strVal3: eval(Number(this.addHumiCeling)), strVal4: eval(Number(this.addHumiFloor)),strVal5:'',strVal6:'', type:'Three'};
-												// console.log(params);
-												ControlsSet(params).then(res => {
-													// console.log(res);
-													this.getDataNum();
-													this.getData();
-													this.loading = false;
-													res = Number(res);
-													if(res == 200){
-														
-														this.dehumiCeling = null;
-														this.dehumiFloor = null;
-														this.$message({
-															type:'success',
-															message:'设置成功！',
-															customClass: 'myMarginTop20'
-														})
-													}else if(res == 201){
-														this.$message({
-															type:'error',
-															message:'设置失败！',
-															customClass: 'myMarginTop20'
-														})
-													} else if (res === 202 ) {
-														this.$message({
-															message: '设备未配置'
-														})
-													} else if (res === 203 ) {
-														this.$message({
-															message: '连接不正常'
-														})
-													} else if (res === 206 ) {
-														this.$message({
-															message: '操作超时'
-														})
-													} else if (res === 203 ) {
-														this.$message({
-															message: '系统异常'
-														})
-													}
-												})
+												if(Number(this.addHumiCeling) <= Number(this.addHumiFloor)) {
+													this.$message({
+														type:'warning',
+														message:'上限不能低于或等于下限!!!',
+														customClass: 'myMarginTop20'
+													})
+												} else {
+													console.log('点击')
+													this.loading = true;
+													this.dialogAIO = false;
+													var params = { sn: this.sn, strVal1: eval(Number(this.dehumiCeling)), strVal2: eval(Number(this.dehumiFloor)), strVal3: eval(Number(this.addHumiCeling)), strVal4: eval(Number(this.addHumiFloor)),strVal5:'',strVal6:'', type:'Three'};
+													// console.log(params);
+													ControlsSet(params).then(res => {
+														// console.log(res);
+														this.getDataNum();
+														this.getData();
+														this.loading = false;
+														res = Number(res);
+														if(res == 200){
+															
+															this.dehumiCeling = null;
+															this.dehumiFloor = null;
+															this.$message({
+																type:'success',
+																message:'设置成功！',
+																customClass: 'myMarginTop20'
+															})
+														}else if(res == 201){
+															this.$message({
+																type:'error',
+																message:'设置失败！',
+																customClass: 'myMarginTop20'
+															})
+														} else if (res === 202 ) {
+															this.$message({
+																message: '设备未配置'
+															})
+														} else if (res === 203 ) {
+															this.$message({
+																message: '连接不正常'
+															})
+														} else if (res === 206 ) {
+															this.$message({
+																message: '操作超时'
+															})
+														} else if (res === 203 ) {
+															this.$message({
+																message: '系统异常'
+															})
+														}
+													})
+												}
+												
 											}
 										}
 									}

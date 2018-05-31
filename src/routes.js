@@ -36,7 +36,10 @@ import Overviews from './views/nv_Overview/Overview.vue'
 import AirControl from './views/nv_AirControl/AirControl.vue'
 
 // 设置仪器隐藏
-import setLoggerHide from './views/nv_Opations/setLoggerHide.vue';
+import setLoggerHide from './views/nv_Opations/setLoggerHide.vue'
+
+// 用户操作信息
+import LoginInfo from './views/nv_LoginInfo/index.vue'
 
 
 let mode = 'history'
@@ -117,9 +120,9 @@ let routes = [
         { path: '/CustomGroup', component: CustomGroup, name: '分组统计' },
         { path: '/MeanValue', component: MeanValue, name: '平均值', hidden: true },
         { path: '/assessment', component: Assessment, name: '综合评估' },
-        // { path: '/Memorandum', component: Memorandum, name: '备忘录' },
+        { path: '/Memorandum', component: Memorandum, name: '备忘录' },
         { path: '/childen_Chart', component: Childen_Chart, name: '', hidden: true },
-        // { path: '/heatField', component: HeatField, name: '热量场' }
+        { path: '/heatField', component: HeatField, name: '热量场' }
         
       ]
     },
@@ -164,9 +167,9 @@ let routes = [
       children: [
         { path: '/changePassWord', component: ChangePassWord, name: '修改密码'  },
         { path: '/setLoggerHide', component: setLoggerHide, name: '隐藏仪器' },
-        // { path: '/dR_Relic', component: DR_Relic, name: '导入文物信息' },
-        // { path: '/pto_Relic', component: Pto_Relic, name: '导入文物图片' },
-        //{ path: '/help', component: Help, name: '帮助',hidden:true }
+        { path: '/dR_Relic', component: DR_Relic, name: '导入文物信息' },
+        { path: '/pto_Relic', component: Pto_Relic, name: '导入文物图片' },
+        // { path: '/loginInfo', component: LoginInfo, name: '操作信息' }
       ]
     },
     {

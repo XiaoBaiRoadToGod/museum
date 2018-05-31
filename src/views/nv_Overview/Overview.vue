@@ -6,7 +6,7 @@
 		<el-col :span='24' class='fontSize18'>博物馆简介</el-col>
 		<el-col :span='24' class='detail'>{{detail}}</el-col>
 		<el-col :span='24' class='moreDetail'>
-			<!-- <a :href="detailsUrl" target='_blank'><i class='el-icon-caret-right'></i>更多详情</a> -->
+			<a :href="detailsUrl" target='_blank'><i class='el-icon-caret-right'></i>更多详情</a>
 		</el-col>
 	</el-col>
 	<el-col :span='16' class="borderCont">
@@ -174,10 +174,10 @@ import {mapState} from 'vuex'
 				setDay: null,
 				setDialog: false,
 				loading: false,
-				quanguanInfo: true,     //  深博、国博、南博为true, 其他false
-				// detailsUrl:'http://www.chnmuseum.cn/'         // 中国国家博物馆
+				quanguanInfo: false,     //  深博、国博、南博为true, 其他false
+				detailsUrl:'http://www.chnmuseum.cn/'         // 中国国家博物馆
 				// detailsUrl:'http://www.njmuseum.com/'         // 南京博物馆
-				detailsUrl:'http://www.shenzhenmuseum.com/'   // 深圳博物馆
+				// detailsUrl:'http://www.shenzhenmuseum.com/'   // 深圳博物馆
 				// detailsUrl:'http://www.zyxbwg.cn'                // 镇原县博物馆
 				// detailsUrl: 'http://www.zlbwg.com/'           //庄浪县博物馆
 				// detailsUrl: 'http://www.jcsbwg.com'           //金昌市博物馆

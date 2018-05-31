@@ -103,7 +103,7 @@
           </el-row>
         </el-row>
         <el-row class='doubleChannel ' :class='{isHidden: channelHide }' >
-          <el-col :span='24' id='wenshiChart' style='height: 560px; ' :style='{width: wenshiWidth+"px" }'>
+          <el-col v-if='!TexNull' :span='24' id='wenshiChart' style='height: 560px; ' :style='{width: wenshiWidth+"px" }'>
           
           </el-col>
         </el-row>
@@ -290,7 +290,14 @@ var oneday = 1000 * 60 * 60 * 24;
         channelHide: true,   // true显示单通道，false显示温湿度数据综合
         wenshiWidth: null,
         memorandumDialog: false,    // 添加备忘录弹窗
-        memorandumContext: ''       // 备忘录内容
+        memorandumContext: '',       // 备忘录内容
+        batchData: [],            // 分批次    保存的数据，渲染到页面的数据
+        batchDate: [],            // 时间
+        batchTatol: null,        // 分批次渲染总条数
+        batchSize: 50,           // 分批次每次渲染的条数
+        batchCount: null,        // 总共分多少次
+        batchDone: 0,            // 已完成多少次
+
       } 
     },
     props: ['dateType'],
@@ -359,7 +366,15 @@ var oneday = 1000 * 60 * 60 * 24;
               'endTime': this.timeFormatter(this.N_value_data_ed),
               'sn': SnID
             };
-            
+            // DataAnalyzer(this.potDate).then(rel => {
+            //   // console.log(rel)
+            //   this.addTab_data(rel);
+            // });
+            // 折线数据 && 表格数据
+            PieExceed(this.potDate).then(piedata => {
+              // console.log(piedata)
+              this.pie_right_Exceed(piedata);
+            });
             // console.log(this.$refs.data_Bigin.displayValue)
             // console.log(this.potDate)
             // console.log(S_NewData,this,N_NewData)
@@ -367,8 +382,9 @@ var oneday = 1000 * 60 * 60 * 24;
             // 现在读取数据 this.Instrument_ID
             DataStat(this.potDate).then(data => {
               // 添加图表
+              console.log(new Date())
               // this.addClass_ID(data);
-              // console.log(data)
+              console.log(data)
               /**@augments
                * 修改选择矿的值，并赋值为null
                */
@@ -378,35 +394,33 @@ var oneday = 1000 * 60 * 60 * 24;
               }
               
               if( data != null && data != '' ){
-                this.picName = data[0].IName;
+                this.picName = data.IName;
               }else{
                 this.picName = ''
               }
-              this.addClass_ID(data);
               this.data_tab_all(data);
-              this.humitureChart(data);
+              this.addTab_data(data);
               this.get_table_data();
+              this.addClass_ID(data);
+              this.humitureChart(data);
             });//
-            DataAnalyzer(this.potDate).then(rel => {
-              // console.log(rel)
-              this.addTab_data(rel);
-            });// 折线数据 && 表格数据
-            PieExceed(this.potDate).then(piedata => {
-              // console.log(piedata)
-              this.pie_right_Exceed(piedata);
-            });
+            
       },
       humitureChart(data){
         // console.log('wenshidu');
         // console.log(data);
-        if( data !== [] && data.length !== 0 ){
-          let dataTime = [], tempData = [], humiData = [], loggerName = data[0].IName;
+        if( data !== [] && data.Time.length !== 0 ){
+          let dataTime = [], tempData = [], humiData = [], loggerName = data.IName;
           let tempMax, tempMin, humiMax, humiMin;
-          for (var i = 0; i < data.length; i++) {
-             dataTime.push(data[i].ITime);
-             tempData.push(data[i].Ch1);
-             humiData.push(data[i].Ch2);
-          };
+          // for (var i = 0; i < data.Time.length; i++) {
+          //    dataTime.push(data[i].ITime);
+          //    tempData.push(data[i].Ch1);
+          //    humiData.push(data[i].Ch2);
+          // };
+          dataTime = data.Time;
+          tempData = data.ChOne;
+          humiData = data.ChTwo;
+
           // 温度最大最小值
           tempMax = this.integerMax(Math.ceil(this.arrayMax(tempData)));
           tempMax = 40;
@@ -579,6 +593,7 @@ var oneday = 1000 * 60 * 60 * 24;
           pageIndex: this.pageIndex - 1 
         };
         historyPageList(params).then(data => {
+          console.log(data)
            this.tab_data_two = []; // 清空
            if(data.length > 0){
              this.picName = data[0].IName;
@@ -600,14 +615,16 @@ var oneday = 1000 * 60 * 60 * 24;
       },
       data_tab_all: function(data){
         // console.log(data);
-        if( data != null && data != '' ){
-          this.pageNum = data.length;
+        if( data.Time != null && data.Time.length != 0 ){
+          this.pageNum = data.ChOne.length;
           this.TexNull = false;
-          this.ChannelNum_tab = data[0].ChannelNum;
+          this.ChannelNum_tab = data.ChannelNum;
           // console.log(this.ChannelNum_tab + '-------');
+          let channelName = ['通道一', '通道二', '通道三', '通道四'];
           this.label_data_tab = []; // 清空
           for (var i = 1; i <= this.ChannelNum_tab; i++) {
-            this.label_data_tab.push(eval("data[0].Ch" + i + "Name"))
+            // this.label_data_tab.push(eval("data.Ch" + i + "Name"))
+            this.label_data_tab.push(channelName[i])
             // data[0].Ch1Name
           }
           // console.log(this.label_data_tab)
@@ -619,40 +636,40 @@ var oneday = 1000 * 60 * 60 * 24;
         }
       },
       addTab_data: function(data){
-        // console.log(data)
+        console.log(data)
         if( data != null ){
           this.Anlyera_tab_had = [];
           this.Anlyera_tab_had.push({
-            "channelNum":data[0].ChannelNum,
-            "count": data[0].count,
-            "beginTime": data[0].beginTime,
-            "endTime": data[0].endTime
+            "channelNum":data.ChannelNum,
+            "count": data.Time.length,
+            "beginTime": this.timeFormatter(this.S_value_data),
+            "endTime": this.timeFormatter(this.N_value_data_ed)
           });
           // 清空数据=>重新渲染数据
           this.DataAnalyzer = [];
           this.MaxMIn_pie_tab = [];
-
-          for(let i = 1 ; i < data.length ; i++){
+          let channelName = ['通道一', '通道二', '通道三', '通道四'];
+          for(let i = 0 ; i < data.ChannelNum; i++){
 
             this.DataAnalyzer.push({
-                "Analyzer": data[i].Name, 
-                "record": data[i].Unit, 
+                "Analyzer": channelName[i], 
+                "record": eval('data.Ch' +(i +1) + 'Unit'), 
                 "S_data": '最大值:', 
-                "S_datas_1": data[i].Max, 
+                "S_datas_1": eval('data.Ch' +(i +1) + 'Max'), 
                 "S_datas_2": '最小值:', 
-                "S_datas_3": data[i].Min, 
+                "S_datas_3": eval('data.Ch' +(i +1) + 'Min'), 
                 "N_data": '平均值:', 
-                "N_datas_1": data[i].Avg  , 
+                "N_datas_1": eval('data.Ch' +(i +1) + 'Avg'), 
                 "N_datas_2": '波动值:', 
-                "N_datas_3": data[i].Waves  
+                "N_datas_3": eval('data.Ch' +(i +1) + 'Wave') 
             })
             // console.log(this.DataAnalyzer)
             this.MaxMIn_pie_tab.push({
-              "name": data[i].Name,
-              "max_data": data[i].Max,
-              "min_data": data[i].Min,
-              "Vao_data": data[i].Avg,
-              "Waves_data": data[i].Waves
+              "name": channelName[i],
+              "max_data": eval('data.Ch' +(i +1) + 'Max'),
+              "min_data": eval('data.Ch' +(i +1) + 'Min'),
+              "Vao_data": eval('data.Ch' +(i +1) + 'Avg'),
+              "Waves_data": eval('data.Ch' +(i +1) + 'Wave')
             })
           }
           // console.log(this.TDArray)
@@ -849,73 +866,60 @@ var oneday = 1000 * 60 * 60 * 24;
           let ohtml = '';
           for (var i = 0; i < this.chats_item; i++) {
             ohtml += "<div class='chat_itens size_chat'>"+
-                            "<div id='chartLine' style='width:" + this.wenshiWidth/2 +  "px; height:280px;' class='chartLine'></div>"+
+                            "<div class='chartLine' style='width:" + this.wenshiWidth/2 +  "px; height:280px;' class='chartLine'></div>"+
                         "</div>"
             $('#chart_tub').html(ohtml);
-            // console.log(ohtml,$('#chart_tB'))
           }
       },
       addClass_ID: function(data){
-        // console.log(data)
-        if( data != null && data != '' ){
-          this.chats_item = data[0].ChannelNum; // 判断有多少组数据 => 储存变量 => 并通过他来创建图表
+        console.log(data)
+        if( data.Time != null && data.Time.length > 0 ){
+          this.chats_item = data.ChannelNum; // 判断有多少组数据 => 储存变量 => 并通过他来创建图表
           // console.log(this.chats_item)
           if( this.chats_item != 0 && this.chats_item != '' && this.chats_item != undefined ){
             this.loading = false;
-            this.cartChat()
+            this.cartChat();
             var box_item = document.querySelectorAll('.chat_itens>div');
             let ChartDataArray = [];
-            for (var i = 0; i < box_item.length; i++) {
-
-              let art = []; //Y轴数据集合
-              let Itie = []; //X轴数据集合
-              let chK = 'Ch' + (i+1);// 数据读取需要的名称 => Y轴数据集合
-              let ChKName = 'Ch' + (i+1) + 'Name'; //数据读取需要的名称 => 鼠标移入的名称
-              let ChOName_1 = ''; // 鼠标移入的名称
-              let IName = 'Ch' + (i+1) + 'NumName'; // 图表数据名称
-              let IName_1 = '';
-              let ChOUnit_1 = '';// Y轴数据名称
-              let ChKUnit = 'Ch' + (i+1) + 'Unit';//数据读取需要的名称 => Y轴数据名称
-              for (var j = 0; j < data.length; j++) {
-                art.push(eval("data[j]." + chK));
-                // console.log(eval("data[j]." + chK),chK)
-                Itie.push(data[j].ITime);
-                ChOName_1 = eval("data[j]." + ChKName);
-                IName_1 = eval("data[j]." + IName);
-                ChOUnit_1 = eval("data[j]." + ChKUnit);
+            console.log(box_item)
+            for(var i = 0; i < box_item.length; i++) {
+              let name = '', channelName = '';
+              switch (i) {
+                case 0:
+                  name = 'ChOne';
+                  channelName = '通道一';
+                  break;
+                case 1:
+                  name = 'ChTwo';
+                  channelName = '通道二';
+                  break;
+                case 2:
+                  name = 'ChThree';
+                  channelName = '通道三';
+                  break;
+                case 3:
+                  name = 'ChFour';
+                  channelName = '通道四';
+                  break;
+              
+                default:
+                  break;
               };
-              // console.log(art);
-              let minData = Math.floor(Math.min.apply(null, art));
-              let maxData = Math.ceil(Math.max.apply(null, art));
-              // console.log(minData);
-              let sortArry = '';
-              let Toptip = '150%';
-              // console.log(IName_1)
-              if( IName_1 == '通道一' ){
-                sortArry = 1;
-                Toptip = '80%';
-              }else if ( IName_1 == '通道二' ){
-                sortArry = 2;
-              }else if ( IName_1 == '通道三' ){
-                sortArry = 3;
-              }else if ( IName_1 == '通道四' ){
-                sortArry = 4;
-              };
-                ChartDataArray.push({
-                  'ChOName':ChOName_1,
-                  'IName':IName_1,
-                  'ITime':Itie,
-                  'ChO':art,
-                  'data':'',
-                  'ChOUnit': ChOUnit_1,
-                  'MinDate': minData,
-                  'MaxDate': maxData,
-                  'name_un': ChOUnit_1,
-                  'sortArry': sortArry,
-                  'burle': Toptip
-                });
-
+              console.log(name)
+              ChartDataArray.push({
+                lineName: channelName,
+                data: eval('data.' + name),
+                unit: eval('data.Ch' + (i + 1) + 'Unit'),
+                max: eval('data.Ch' + (i +1) + 'Max'),
+                min: eval('data.Ch' + (i +1) + 'Min'),
+                dete: data.Time,
+                sortArry: i,
+                name: data.IName
+              })
             }
+            
+            console.log(ChartDataArray);
+            console.log(new Date())
             for (var i = 0; i < box_item.length; i++) {
                //根据通道（sort）排序  
                 function sortsArray(a,b){  
@@ -923,14 +927,13 @@ var oneday = 1000 * 60 * 60 * 24;
                 }  
                 //利用js中的sort方法  
                 ChartDataArray.sort(sortsArray);
-                // console.log(ChartDataArray)
-                this.chart_data_up(i,ChartDataArray[i].ChOName,ChartDataArray[i].IName,ChartDataArray[i].ITime,ChartDataArray[i].ChO,ChartDataArray[i].data, ChartDataArray[i].name_un ,ChartDataArray[i].MaxDate,ChartDataArray[i].MinDate,ChartDataArray[i].burle);
+                this.chart_data_up(i,'null', ChartDataArray[i].lineName,ChartDataArray[i].dete,ChartDataArray[i].data, '', ChartDataArray[i].unit ,ChartDataArray[i].max,ChartDataArray[i].min,ChartDataArray[i].burle);
                 // 停止加载loading
                 this.loading = false;
 
-                echarts.connect('group') // 设置联动数据           
-              }
-
+                echarts.connect('group'); // 设置联动数据           
+            }
+            console.log(new Date())
             this.ChartDataArray = ChartDataArray;
           }else{
             this.loading = false;
@@ -973,7 +976,7 @@ var oneday = 1000 * 60 * 60 * 24;
           }
         
       },
-      arrayMax:function(arr){
+      arrayMax:function(arr) {
         var max = arr[0] == '-'?0:arr[0];
         for(var i = 1; i < arr.length; i++){
           if( max < Number(arr[i]) ){
@@ -997,14 +1000,12 @@ var oneday = 1000 * 60 * 60 * 24;
         // console.log(i,name,lineName,xAxis_data,yAxis_Adata,xAxis_Name,yAxis_Name)
         // i ChOName IName ITime ChO data ChOUnit
         // 基于准备好的dom，初始化echarts实例
-        // console.log(this.lineStyleWidth);
         max = this.integerMax(Math.ceil(max));
         min = this.integerMin(Math.ceil(min));
         var interval = (max - min)/5;
         var _this = this;
-        // this.chartLine = echarts.init(document.querySelectorAll('#chartLine')[i]);
         this.$nextTick(function () {
-          this.chartLine = echarts.init(document.querySelectorAll('#chartLine')[i]);
+          this.chartLine = echarts.init(document.querySelectorAll('.chartLine')[i]);
           this.chartLine.setOption({
             title: {
                 // text: 'Line Chart'
@@ -1013,7 +1014,7 @@ var oneday = 1000 * 60 * 60 * 24;
                 trigger: 'axis'
             },
             toolbox: {
-              left: burle,
+              left: '80%',
               top: '1%',
               itemSize: 25,
               width:'20%',
@@ -1055,10 +1056,10 @@ var oneday = 1000 * 60 * 60 * 24;
               boundaryGap: true,
               name: xAxis_Name,
               data: xAxis_data.map(function (str) {
+                // console.log(str)
                 var str_before = str.split(' ')[0];
                 var str_after = str.split(' ')[1];
                 return str_after + '\n' + str_before;
-                // return str.replace(' ', '\n')
               })
             },
             yAxis: {
@@ -1076,7 +1077,7 @@ var oneday = 1000 * 60 * 60 * 24;
                     type: 'line',
                     symbol: 'none',
                     smooth: false,
-                    stack: lineName,
+                    // stack: lineName,
                     data: yAxis_Adata,
                     lineStyle: { normal: { width: this.lineStyleWidth }}
                 }
@@ -1092,13 +1093,6 @@ var oneday = 1000 * 60 * 60 * 24;
           message: msg,
           type: type_msg
         });
-      },
-      clickTab: function(){
-        // $('.btn_tab>button').on('click',function(){
-        //   let inx = $(this).index();
-        //   $(this).addClass('active').siblings().removeClass('active')
-        //   $('.tab_Cls').eq([inx]).addClass('active').siblings().removeClass('active')
-        // })
       },
       PieExceed_data: function(Name,IName,LenData,SersData){//pie图
         this.$nextTick(function () {
@@ -1186,8 +1180,6 @@ var oneday = 1000 * 60 * 60 * 24;
         // this.N_value_data_ed = val;
       },
       formatDateTime(time){
-        console.log('formatTIME')
-        console.log(time);
         var date = new Date(Date.parse(time.replace(/-/g,"/")));
         // console.log(date);
         var y = date.getFullYear();
@@ -1198,7 +1190,6 @@ var oneday = 1000 * 60 * 60 * 24;
         var h = date.getHours();
         var minute = date.getMinutes();
         minute = minute < 10 ? ('0'+minute) : minute;
-        // console.log(y +  '-' + m + '-'+d+ ' '+ h + ":"+minute);
         return y +  '/' + m + '/'+d+ ' '+ h + ":"+minute;
       },
       formatDate:function(now) {
@@ -1224,10 +1215,7 @@ var oneday = 1000 * 60 * 60 * 24;
         this.memorandumDialog = true;
       },
       AddMemorandumClick() {   // 保存备忘录
-        // console.log(this.S_value_data +'---开始');
-        // console.log(this.N_value_data_ed + '---结束');
         console.log(this.$store.state.zhantingID);
-        // console.log(this.memorandumContext == '')
         if(this.memorandumContext == '' || this.memorandumContext == null) {
           this.$message({
             type: 'error',
@@ -1264,7 +1252,7 @@ var oneday = 1000 * 60 * 60 * 24;
       }
     },
     updated:function(){
-
+      
       if( this.TexNull == true ){
         $('.data_Anlyera').hide();
         $('#chart_tub').empty();
@@ -1274,7 +1262,6 @@ var oneday = 1000 * 60 * 60 * 24;
         $('.hide_TF').show();
       }
       // console.log($('.btn_tab>button'));
-      // this.clickTab();
     },
     mounted: function(){
       //初始化函数
@@ -1307,14 +1294,14 @@ var oneday = 1000 * 60 * 60 * 24;
     },
     activated(){
       // this.value = this.$store.state.NewID;
-      console.log('----历史数据')
-      console.log(this.$store.state.historySn)
+      // console.log('----历史数据')
+      // console.log(this.$store.state.historySn)
       if (this.$store.state.historySn !== null && this.$store.state.historySn !== '') {
         // console.log(this.$store.state.historySn)
-        console.log('----历史数据----')
+        // console.log('----历史数据----')
         this.S_value_data = this.formatDateTime(this.$store.state.startDate);
         this.N_value_data_ed = this.formatDateTime(this.$store.state.endDate);
-        console.log(this.N_value_data_ed)
+        // console.log(this.N_value_data_ed)
         this.value = this.$store.state.historySn;
         this.Instrument_ID = this.$store.state.historySn;
         this.$nextTick(function(){
@@ -1327,7 +1314,7 @@ var oneday = 1000 * 60 * 60 * 24;
         
         
       } else {
-        console.log('---什么都没有---')
+        // console.log('---什么都没有---')
         this.potDateID(this);
       }
       

@@ -94,9 +94,10 @@
 </template>
 
 <script>
-  import { userLogin } from '../api/api'
+  import { userLogin, getUserIp } from '../api/api'
   import qs from 'qs'
   import GVerify from '../common/verify'
+  import { getIp } from '../common/js/getIp'
 
 
 
@@ -106,9 +107,10 @@
       return {
         logining: false,
         ruleForm2: {
-          account: '',   // 国博默认 admin
-          checkPass: '',  // 国博默认 admin
-          verifyCode:''
+          account: 'admin',   // 国博默认 admin
+          checkPass: 'admin',  // 国博默认 admin
+          verifyCode:'',
+          userIp: ''
         },
         rules2: {
           account: [
@@ -132,8 +134,8 @@
         // loginImg: '../../static/img/huato.JPG',    // 公司logo
         // loginImg: '../../static/img/nanboLoginLogo.png',   // 南博的登录页背景
         // loginImg: '../../static/img/shenboLoginLogo.png',   // 深博的登录页背景
-        // loginImg: '../../static/img/guoboLoginLogo.png',   // 国博的登录页背景
-        loginImg: '../../static/img/chongxinLoginLogo.jpg',   // 崇信的登录页背景
+        loginImg: '../../static/img/guoboLoginLogo.png',   // 国博的登录页背景
+        // loginImg: '../../static/img/chongxinLoginLogo.jpg',   // 崇信的登录页背景
         // loginImg: '../../static/img/zhuanglangLogin.png',   // 庄浪的登录页背景
         // loginImg: '../../static/img/longxiLoginLogo.jpg',   // 陇西的登录页背景
         // loginImg: '../../static/img/eerLoginLogo.jpg',   // 鄂尔多斯的登录页背景
@@ -144,11 +146,12 @@
         // loginImg: '../../static/img/mianyangLoginLogo.png',     // 绵阳的登录页背景
         // loginImg: '../../static/img/haishangsichouLogin.jpg',     // 广东海上丝绸之路的登录页背景
         // loginImg: '../../static/img/anhuiLogin.png',   // 安徽的登录页背景
+        // loginImg: '../../static/img/huating.jpg',   // 华亭的登录页背景
         qrcode: true,     // 二维码开关 ， true为显示
         hideCode: false,    // 隐藏验证码，true隐藏     国博隐藏
-        codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
+        // codeVal: 'http://172.16.50.245:8082',              // 二维码文字  深博
         // codeVal: 'http://192.168.90.157:8082',              // 二维码文字  南博
-        // codeVal: 'http://huato.net:8022',               // 国博 
+        codeVal: 'http://huato.net:8022',               // 国博 
         // codeVal: 'http://huato.net:8013',                 // 展会
         QrLogoSrc: '../../static/img/LOGO182.png'    //  logo 
       };
@@ -173,6 +176,7 @@
         var _this = this;
         // this.$router.push({ path: '/real' });
         this.$refs.ruleForm2.validate((valid) => {
+          console.log(this.userIp)
           if(this.hideCode){
             if (valid) {
                 //_this.$router.replace('/table');
@@ -270,9 +274,22 @@
     },
     mounted(){
       var _this = this;
+      var RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection || window.msRTCPeerConnection;
+      if (RTCPeerConnection) {
+        getIp(ip => {
+          this.userIp = ip
+        })
+      } else {
+        getUserIp().then(res => {
+          var reg = /[^\(\)]+(?=\))/g
+          var result = res.match(reg)
+          this.userIp = JSON.parse(result[0]).ip;
+        })
+      }
       if(!this.hideCode) {
         this.verify = new GVerify('verifyCode'); // 初始化验证码
       }
+      
       
       window.addEventListener('scroll',this.scanScroll);
       $(window).keyup(function(ev){

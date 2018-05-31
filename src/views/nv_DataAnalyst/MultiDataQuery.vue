@@ -309,7 +309,7 @@ var oneday = 1000 * 60 * 60 * 24;
 				this.chooseContShow = false; // 关闭弹窗
 			},
 			humitureChart(data){
-				// console.log(JSON.stringify(data));
+				console.log(data);
 				var dataTime = [];  //时间
 				var sigleName = '';
 				var sigleUnit = '';
@@ -790,7 +790,7 @@ var oneday = 1000 * 60 * 60 * 24;
 								}
 							}
 						}
-						console.log(dataMaxLength)
+						console.log(data)
 						// console.log(JSON.stringify(data));
 						data = data.sort(function(a, b){  // 按名字排序
 							return (a.IName).localeCompare(b.IName, 'zh-Hans-CN', {sensitivity: 'accent'});

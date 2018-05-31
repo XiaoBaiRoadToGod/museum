@@ -263,68 +263,71 @@ export default {
         console.log(data);
         this.rela_img = '';
         this.items = [];
-        data = data.sort(function(a, b){  // 按名字排序            
+        if (data.length !== 0) {
+          data = data.sort(function(a, b){  // 按名字排序            
             return (a[0]).localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'});
           });
-        for (var i = 0; i < data.length; i++) {
-          this.rela_img = data[i][23];
-          // console.log(data[i][13])
-          var shebeiNumber;
-          if( data[i][1] !== null && data[i][2] !== null && data[i][3] !== null  && data[i][4]){
-              shebeiNumber = 4;
-          }else if (data[i][1] !== null && data[i][2] !== null && data[i][3] != null) {
-              shebeiNumber = 3;
-          } else if (data[i][1] !== null && data[i][2] !== null ) {
-            shebeiNumber = 2;
-          }else {
-            shebeiNumber = 1;
-          }
-          var isHengwen = data[i][13].indexOf('恒温恒湿机') >= 0;
-          // console.log(isHengwen);
+          for (var i = 0; i < data.length; i++) {
+            this.rela_img = data[i][23];
+            // console.log(data[i][13])
+            var shebeiNumber;
+            if( data[i][1] !== null && data[i][2] !== null && data[i][3] !== null  && data[i][4]){
+                shebeiNumber = 4;
+            }else if (data[i][1] !== null && data[i][2] !== null && data[i][3] != null) {
+                shebeiNumber = 3;
+            } else if (data[i][1] !== null && data[i][2] !== null ) {
+              shebeiNumber = 2;
+            }else {
+              shebeiNumber = 1;
+            }
+            var isHengwen = data[i][13] !== null ? data[i][13].indexOf('恒温恒湿机') >= 0 : false;
+            // console.log(isHengwen);
 
-          // 湿度超标 让他显示正常
-          // let humi = '';
-          // if(zhantingID == 104 || zhantingID == 105) {
-          //   if(data[i][2] >= 60) {
-          //     humi = this.MathRandom();
-          //   } else {
-          //     humi = data[i][2];
-          //   }
-          // } else {
-          //   humi = data[i][2];
-          // }
-          this.items.push({
-            "Name":data[i][0],
-            "UulIng":data[i][13],
-            "UingElecT": data[i][22],
-            "Top":(Number(data[i][11])+Number(data[i][12])) * 50,
-            "Left":(Number(data[i][9])+Number(data[i][10])) * 50,
-            "inx": "popover" + (i+1),
-            "Tmp":data[i][1],
-            "Huid":data[i][2],
-            // "Huid": humi,
-            "Songd":data[i][3],
-            "Uaug":data[i][4],
-            "Tmp_Unit":data[i][5],
-            "Huid_Unit":data[i][6],
-            "Songd_Unit":data[i][7],
-            "Uaug_Unit":data[i][8],
-            "color1":data[i][14],
-            "color2":data[i][15],
-            // "color2": '#666',
-            "color3":data[i][16],
-            "color4":data[i][17],
-            "yiId": data[i][20] + '/' + data[i][19],
-            "Tmp_Name":data[i][24],
-            "Huid_Name":data[i][25],
-            "Songd_Name":data[i][26],
-            "Uaug_Name":data[i][27],
-            "isHengwen": isHengwen,
-            "number": shebeiNumber,
-            'time': this.dateTimeFormater(data[i][21])
-          })
-        };
-        console.log(this.items);
+            // 湿度超标 让他显示正常
+            // let humi = '';
+            // if(zhantingID == 104 || zhantingID == 105) {
+            //   if(data[i][2] >= 60) {
+            //     humi = this.MathRandom();
+            //   } else {
+            //     humi = data[i][2];
+            //   }
+            // } else {
+            //   humi = data[i][2];
+            // }
+            this.items.push({
+              "Name":data[i][0],
+              "UulIng":data[i][13],
+              "UingElecT": data[i][22],
+              "Top":(Number(data[i][11])+Number(data[i][12])) * 50,
+              "Left":(Number(data[i][9])+Number(data[i][10])) * 50,
+              "inx": "popover" + (i+1),
+              "Tmp":data[i][1],
+              "Huid":data[i][2],
+              // "Huid": humi,
+              "Songd":data[i][3],
+              "Uaug":data[i][4],
+              "Tmp_Unit":data[i][5],
+              "Huid_Unit":data[i][6],
+              "Songd_Unit":data[i][7],
+              "Uaug_Unit":data[i][8],
+              "color1":data[i][14],
+              "color2":data[i][15],
+              // "color2": '#666',
+              "color3":data[i][16],
+              "color4":data[i][17],
+              "yiId": data[i][20] + '/' + data[i][19],
+              "Tmp_Name":data[i][24],
+              "Huid_Name":data[i][25],
+              "Songd_Name":data[i][26],
+              "Uaug_Name":data[i][27],
+              "isHengwen": isHengwen,
+              "number": shebeiNumber,
+              'time': data[i][21] == null ? null : this.dateTimeFormater(data[i][21])
+            })
+          };
+          console.log(this.items);
+        }
+        
       }).then(() => {
         // this.watchZhantingOF();
       });
